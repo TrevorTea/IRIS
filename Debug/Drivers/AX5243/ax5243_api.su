@@ -4,3 +4,4 @@
 ../Drivers/AX5243/ax5243_api.c:73:9:AX_Radio_Check_PLL_Lock	16	static
 ../Drivers/AX5243/ax5243_api.c:78:9:AX_Radio_Range_PLL	24	static
 ../Drivers/AX5243/ax5243_api.c:96:9:AX_Radio_Reset	16	static
+../Drivers/AX5243/ax5243_api.c:103:9:AX_Radio_Poweroff	16	static

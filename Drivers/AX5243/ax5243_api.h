@@ -48,5 +48,12 @@
 	 */
 	uint8_t AX_Radio_Reset(SPI_HandleTypeDef * hspi);
 
+	/**
+	 * @brief Powers off the AX Radio, register contents are lost
+	 * @param hspi hspi handle
+	 * @retval status 0 indicates success
+	 */
+	uint8_t AX_Radio_Poweroff(SPI_HandleTypeDef * hspi);
+
 
 #endif /* AX5243_AX5243_API_H_ */
