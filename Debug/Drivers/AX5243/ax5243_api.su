@@ -1,0 +1,4 @@
+../Drivers/AX5243/ax5243_api.c:11:9:AX_Radio_Init	32	static
+../Drivers/AX5243/ax5243_api.c:68:10:AX_Radio_Get_Status	32	static
+../Drivers/AX5243/ax5243_api.c:77:9:AX_Radio_Check_PLL	16	static
+../Drivers/AX5243/ax5243_api.c:82:9:AX_Radio_Check_PLL_Lock	16	static

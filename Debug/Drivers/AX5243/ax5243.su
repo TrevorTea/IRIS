@@ -1,0 +1,14 @@
+../Drivers/AX5243/ax5243.c:9:19:AX_Radio_RW_Short_Address	40	static
+../Drivers/AX5243/ax5243.c:29:19:AX_Radio_RW_Long_Address	40	static
+../Drivers/AX5243/ax5243.c:55:6:radio_write8	32	static
+../Drivers/AX5243/ax5243.c:66:9:radio_read8	32	static
+../Drivers/AX5243/ax5243.c:77:6:AX_Radio_Set_Registers	16	static
+../Drivers/AX5243/ax5243.c:207:6:AX_Radio_Set_Registers_TX	16	static
+../Drivers/AX5243/ax5243.c:217:6:AX_Radio_Set_Registers_RX	16	static
+../Drivers/AX5243/ax5243.c:227:6:AX_Radio_Set_Registers_RXWOR	16	static
+../Drivers/AX5243/ax5243.c:234:6:AX_Radio_Set_Registers_RXWOR_SingleParamset	16	static
+../Drivers/AX5243/ax5243.c:318:16:axradio_tunevoltage	24	static
+../Drivers/AX5243/ax5243.c:340:9:axradio_calvcoi	288	static
+../Drivers/AX5243/ax5243.c:369:9:AX_Radio_Set_Registers_Common	24	static
+../Drivers/AX5243/ax5243.c:384:9:AX_RADIO_Get_Pwrmode	16	static
+../Drivers/AX5243/ax5243.c:389:9:AX_RADIO_Get_Pwrmode_Upper	16	static
