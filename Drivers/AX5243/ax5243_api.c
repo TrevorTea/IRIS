@@ -34,20 +34,11 @@ uint8_t AX_Radio_Init(SPI_HandleTypeDef * hspi)
 		axradio_calvcoi(hspi);
 
 		extern uint8_t * axradio_phy_chanpllrng;
-		uint8_t r = 0x18; //big bet here, but I think this is right to start the PLL range
-		radio_write8(AX5043_REG_PLLRANGINGA, r, hspi);
 
-		//TODO, extract this into a separate function. I imagine waiting on the PLL will be helpful
-		//Also if shit isn't working look here first.
-		while(radio_read8(AX5043_REG_PLLRANGINGA, hspi) & 0x10) {
-			if(radio_read8(AX5043_REG_PLLRANGINGA, hspi) & 0x20) {
-				return AXRADIO_ERR_RANGING;
-			}
+		if (AX_Radio_Range_PLL(hspi)) {
+			//return AXRADIO_ERR_RANGING;
 		}
 
-		if(radio_read8(AX5043_REG_PLLRANGINGA, hspi) & 0x20) {
-			return AXRADIO_ERR_RANGING;
-		}
 		axradio_phy_chanpllrng[0] = radio_read8(AX5043_REG_PLLRANGINGA, hspi);
 		radio_write8(AX5043_REG_PLLLOOP, (radio_read8(AX5043_REG_PLLLOOP, hspi) | 0x04), hspi);
 		//Hidden register manipulation. If God asked me what this did I would have no answer
@@ -92,12 +83,24 @@ uint8_t AX_Radio_Range_PLL(SPI_HandleTypeDef * hspi)
 	{
 		pll_contents = radio_read8(AX5043_REG_PLLRANGINGA, hspi);
 		if(pll_contents & 0x20) {
-			return 1;
+			return pll_contents;	//Range error
 		}
 		if(pll_contents & 0x40) {
-			return 0;
+			return 0;				//Range lock
 		}
 	}
 	while (pll_contents & 0x10);
 	return 0; //Ideally this should be dead code... Make error?
+}
+
+uint8_t AX_Radio_Reset(SPI_HandleTypeDef * hspi)
+{
+	if (radio_write8(0x80, AX5043_REG_PWRMODE, hspi)) {return 1;}
+	HAL_Delay(1000);
+	return 0;
+}
+
+uint8_t AX_Radio_Poweroff(SPI_HandleTypeDef * hspi)
+{
+	return radio_write8(0x00, AX5043_REG_PWRMODE, hspi);
 }

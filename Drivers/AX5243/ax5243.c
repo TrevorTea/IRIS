@@ -52,14 +52,14 @@ HAL_StatusTypeDef AX_Radio_RW_Long_Address(uint16_t * addr, uint16_t * status, u
 	}
 
 
-void radio_write8(uint16_t reg, uint8_t data, SPI_HandleTypeDef * hspi)
+uint8_t radio_write8(uint16_t reg, uint8_t data, SPI_HandleTypeDef * hspi)
 	{
 		uint16_t reg_local, status_local;
 		uint8_t data_local;
 		reg_local = reg;
 		status_local = 0;
 		data_local = data;
-		AX_Radio_RW_Long_Address(&reg_local, &status_local, &data_local,
+		return AX_Radio_RW_Long_Address(&reg_local, &status_local, &data_local,
 				hspi, 0xFF, 0x1);
 	}
 
@@ -207,7 +207,7 @@ void AX_Radio_Set_Registers(SPI_HandleTypeDef * hspi)
 void AX_Radio_Set_Registers_TX(SPI_HandleTypeDef * hspi)
 	{
 		radio_write8(AX5043_REG_PLLLOOP, 0x04, hspi);
-		radio_write8(AX5043_REG_PLLCPI, 0x01, hspi);
+		radio_write8(AX5043_REG_PLLCPI, 0xff, hspi);
 		radio_write8(AX5043_REG_PLLVCODIV, 0x34, hspi);
 		radio_write8(AX5043_REG_XTALCAP, 0x08, hspi);
 		radio_write8(AX5043_REG_0xF00, 0x0F, hspi);
@@ -390,4 +390,3 @@ uint8_t AX_RADIO_Get_Pwrmode_Upper(SPI_HandleTypeDef * hspi)
 {
 	return AX_RADIO_Get_Pwrmode(hspi) & 0xF0;
 }
-

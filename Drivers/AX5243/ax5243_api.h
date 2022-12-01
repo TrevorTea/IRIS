@@ -41,4 +41,12 @@
 	 */
 	uint8_t AX_Radio_Range_PLL(SPI_HandleTypeDef * hspi);
 
+	/**
+	 * @brief Resets the AX Radio by setting the RST bit high in the pwrmode register
+	 * @param hspi hspi handle
+	 * @retval status 0 indicates success
+	 */
+	uint8_t AX_Radio_Reset(SPI_HandleTypeDef * hspi);
+
+
 #endif /* AX5243_AX5243_API_H_ */

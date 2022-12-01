@@ -1,6 +1,6 @@
 ../Drivers/AX5243/ax5243.c:9:19:AX_Radio_RW_Short_Address	40	static
 ../Drivers/AX5243/ax5243.c:29:19:AX_Radio_RW_Long_Address	40	static
-../Drivers/AX5243/ax5243.c:55:6:radio_write8	32	static
+../Drivers/AX5243/ax5243.c:55:9:radio_write8	32	static
 ../Drivers/AX5243/ax5243.c:66:9:radio_read8	32	static
 ../Drivers/AX5243/ax5243.c:77:6:AX_Radio_Set_Registers	16	static
 ../Drivers/AX5243/ax5243.c:207:6:AX_Radio_Set_Registers_TX	16	static

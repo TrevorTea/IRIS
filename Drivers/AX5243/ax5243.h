@@ -45,8 +45,9 @@
 	 * @param reg 16 bit register address literal
 	 * @param data 8 bit data value literal
 	 * @param hspi hspi handle
+	 * @retval HAL SPI return status from all three interactions
 	 */
-	void radio_write8(uint16_t reg, uint8_t data, SPI_HandleTypeDef * hspi);
+	uint8_t radio_write8(uint16_t reg, uint8_t data, SPI_HandleTypeDef * hspi);
 
 	/**
 		 * @brief Wrapper for AX Radio Lab SPI interfacing to satisfy library
