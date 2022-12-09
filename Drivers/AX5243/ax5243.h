@@ -91,25 +91,36 @@
 	/**
 	 * @brief Assists in calibrating the vcoi
 	 * @param hspi hspi handle
+	 * @retval status 0 indicates success
 	 */
 	uint8_t axradio_calvcoi(SPI_HandleTypeDef * hspi);
 
 	/**
 		 * @brief Common register init
 		 * @param hspi hspi handle
+		 * @retval status 0 indicates success
 		 */
 	uint8_t AX_Radio_Set_Registers_Common(SPI_HandleTypeDef * hspi);
 
 	/**
 	 	 * @brief Read power mode register
 		 * @param hspi hspiu handle 
+		 * @retval AX Radio powermode register contents
 	*/
-	uint8_t AX_RADIO_Get_Pwrmode(SPI_HandleTypeDef * hspi);
+	uint8_t AX_Radio_Get_Pwrmode(SPI_HandleTypeDef * hspi);
 
 	/**
 	 	 * @brief Read power mode register
 		 * @param hspi hspiu handle 
+		 * @retval AX Radio powermode register upper nibbkle
 	*/
-	uint8_t AX_RADIO_Get_Pwrmode_Upper(SPI_HandleTypeDef * hspi);
+	uint8_t AX_Radio_Get_Pwrmode_Upper(SPI_HandleTypeDef * hspi);
+
+	/**
+	 	 * @brief Init AX Radio with minimum definitions for CW TX
+	 	 * @param hspi hspi handle
+	 	 * @retval status 0 indicates success
+	 */
+	uint8_t AX_Radio_Set_Registers_TXCW(SPI_HandleTypeDef * hspi);
 
 #endif /* AX5243_AX5243_H_ */

@@ -79,7 +79,7 @@ void AX_Radio_Set_Registers(SPI_HandleTypeDef * hspi)
 		radio_write8(AX5043_REG_MODULATION, 0x08, hspi);
 		radio_write8(AX5043_REG_ENCODING, 0x00, hspi);
 		radio_write8(AX5043_REG_FRAMING, 0x26, hspi);
-		radio_write8(AX5043_REG_PINFUNCSYSCLK, 0x01, hspi);
+		radio_write8(AX5043_REG_PINFUNCSYSCLK, 0x04, hspi);
 		radio_write8(AX5043_REG_PINFUNCDCLK, 0x01, hspi);
 		radio_write8(AX5043_REG_PINFUNCDATA, 0x01, hspi);
 		radio_write8(AX5043_REG_PINFUNCANTSEL, 0x01, hspi);
@@ -199,16 +199,16 @@ void AX_Radio_Set_Registers(SPI_HandleTypeDef * hspi)
 		radio_write8(AX5043_REG_0xF22, 0xFF, hspi);
 		radio_write8(AX5043_REG_0xF23, 0x84, hspi);
 		radio_write8(AX5043_REG_0xF26, 0x98, hspi);
-		radio_write8(AX5043_REG_0xF34, 0x08, hspi);
-		radio_write8(AX5043_REG_0xF35, 0x11, hspi);
+		radio_write8(AX5043_REG_0xF34, 0x28, hspi);
+		radio_write8(AX5043_REG_0xF35, 0x10, hspi);
 		radio_write8(AX5043_REG_0xF44, 0x25, hspi);
 	}
 
 void AX_Radio_Set_Registers_TX(SPI_HandleTypeDef * hspi)
 	{
 		radio_write8(AX5043_REG_PLLLOOP, 0x04, hspi);
-		radio_write8(AX5043_REG_PLLCPI, 0xff, hspi);
-		radio_write8(AX5043_REG_PLLVCODIV, 0x34, hspi);
+		radio_write8(AX5043_REG_PLLCPI, 0x08, hspi);
+		radio_write8(AX5043_REG_PLLVCODIV, 0x04, hspi);
 		radio_write8(AX5043_REG_XTALCAP, 0x08, hspi);
 		radio_write8(AX5043_REG_0xF00, 0x0F, hspi);
 		radio_write8(AX5043_REG_0xF18, 0x06, hspi);
@@ -244,7 +244,9 @@ void AX_Radio_Set_Registers_RXWOR_SingleParamset(SPI_HandleTypeDef * hspi)
 // physical layer
 const uint8_t  axradio_phy_pn9 = 0;
 const uint8_t  axradio_phy_nrchannels = 1;
-const uint32_t  axradio_phy_chanfreq[1] = { 0x063b47bf };
+//const uint32_t  axradio_phy_chanfreq[1] = { 0x063b47bf };
+//const uint32_t  axradio_phy_chanfreq[1] = { 0x0A900000 }; //169MHz @ 16MHz XTAL
+const uint32_t  axradio_phy_chanfreq[1] = { 0x1B100000 }; //433MHz @ 16MHz XTAL
 const uint16_t  axradio_phy_chanpllrnginit[1] = { 0xFF };
 const uint8_t  axradio_phy_chanvcoiinit[1] = { 0x00 };
 uint16_t axradio_phy_chanpllrng[1];
@@ -381,12 +383,46 @@ uint8_t AX_Radio_Set_Registers_Common(SPI_HandleTypeDef * hspi)
 	return AXRADIO_ERR_NOERROR;
 }
 
-uint8_t AX_RADIO_Get_Pwrmode(SPI_HandleTypeDef * hspi) 
+uint8_t AX_Radio_Get_Pwrmode(SPI_HandleTypeDef * hspi)
 {
 	return radio_read8(AX5043_REG_PWRMODE, hspi);
 }
 
-uint8_t AX_RADIO_Get_Pwrmode_Upper(SPI_HandleTypeDef * hspi)
+uint8_t AX_Radio_Get_Pwrmode_Upper(SPI_HandleTypeDef * hspi)
 {
-	return AX_RADIO_Get_Pwrmode(hspi) & 0xF0;
+	return AX_Radio_Get_Pwrmode(hspi) & 0xF0;
+}
+
+uint8_t AX_Radio_Set_Registers_TXCW(SPI_HandleTypeDef * hspi)
+{
+	radio_write8(AX5043_REG_MODULATION, 0x08, hspi);
+	radio_write8(AX5043_REG_PINFUNCSYSCLK, 0x04, hspi);
+	radio_write8(AX5043_REG_TXPWRCOEFFB1, 0x0F, hspi);
+	radio_write8(AX5043_REG_TXPWRCOEFFB0, 0xFF, hspi);
+	radio_write8(AX5043_REG_XTALOSC, 0x03, hspi);
+	radio_write8(AX5043_REG_XTALAMPL, 0x07, hspi);
+	radio_write8(AX5043_REG_PLLVCODIV, 0x04, hspi);
+	radio_write8(AX5043_REG_XTALCAP, 0x01, hspi);
+
+	radio_write8(AX5043_REG_FSKDEV2, 0x00, hspi);
+	radio_write8(AX5043_REG_FSKDEV1, 0x00, hspi);
+	radio_write8(AX5043_REG_FSKDEV0, 0x00, hspi);
+	radio_write8(AX5043_REG_TXRATE2, 0x00, hspi);
+	radio_write8(AX5043_REG_TXRATE1, 0x00, hspi);
+	radio_write8(AX5043_REG_TXRATE0, 0x01, hspi);
+
+	uint32_t freq = axradio_phy_chanfreq[0];
+	radio_write8(AX5043_REG_FREQA0, freq, hspi);
+	radio_write8(AX5043_REG_FREQA1, (freq >> 8), hspi);
+	radio_write8(AX5043_REG_FREQA2, (freq >> 16), hspi);
+	radio_write8(AX5043_REG_FREQA3, (freq >> 24), hspi);
+
+	radio_write8(AX5043_REG_0xF00, 0x0F, hspi);
+	radio_write8(AX5043_REG_0xF0D, 0x03, hspi);
+	radio_write8(AX5043_REG_0xF18, 0x06, hspi);
+	radio_write8(AX5043_REG_0xF1C, 0x07, hspi);
+	radio_write8(AX5043_REG_0xF34, 0x28, hspi);
+	radio_write8(AX5043_REG_0xF35, 0x10, hspi);
+	radio_write8(AX5043_REG_0xF44, 0x24, hspi);
+	return AXRADIO_ERR_NOERROR;
 }

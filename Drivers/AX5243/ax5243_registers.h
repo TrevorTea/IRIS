@@ -133,12 +133,13 @@
 #define AX5043_REG_0xF34				0xF34
 #define AX5043_REG_0xF35				0xF35
 #define AX5043_REG_0xF44				0xF44
-#define AX5043_REG_PLLLOOP				0x1030
-#define AX5043_REG_PLLCPI				0x1031
-#define AX5043_REG_PLLVCODIV			0x1032
-#define AX5043_REG_XTALCAP				0x1184
-#define AX5043_REG_0xF00				0x1F00
-#define AX5043_REG_0xF18				0x1F18
+#define AX5043_REG_PLLLOOP				0x030
+#define AX5043_REG_PLLCPI				0x031
+#define AX5043_REG_PLLVCODIV			0x032
+#define AX5043_REG_XTALCAP				0x184
+#define AX5043_REG_0xF00				0xF00
+#define AX5043_REG_0xF0D				0xF0D
+#define AX5043_REG_0xF18				0xF18
 //There were some redefinitions here that had to be deleted
 #define AX5043_REG_TMGRXAGC_(WOR)		0x3000
 #define AX5043_REG_TMGRXPREAMBLE1_(WOR)	0x3001

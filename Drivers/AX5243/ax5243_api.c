@@ -10,14 +10,14 @@
 
 uint8_t AX_Radio_Init(SPI_HandleTypeDef * hspi)
 	{
-		radio_write8(AX5043_REG_PWRMODE, AX_RADIO_Get_Pwrmode_Upper(hspi) | AX5043_PWRSTATE_XTAL_ON, hspi);
+		radio_write8(AX5043_REG_PWRMODE, AX_Radio_Get_Pwrmode_Upper(hspi) | AX5043_PWRSTATE_XTAL_ON, hspi);
 		AX_Radio_Set_Registers(hspi);
 		AX_Radio_Set_Registers_TX(hspi);
 		//AX_Radio_Set_Registers_Common(hspi);	//may not be necessary
 		radio_write8(AX5043_REG_MODULATION, 8, hspi);   // Set an FSK mode
 		radio_write8(AX5043_REG_FSKDEV2, 0x00, hspi);
 		radio_write8(AX5043_REG_FSKDEV1, 0x00, hspi);
-		radio_write8(AX5043_REG_FSKDEV0, 0x00, hspi);
+		radio_write8(AX5043_REG_FSKDEV0, 0x10, hspi);
 		radio_write8(AX5043_REG_TXRATE2, 0x00, hspi);
 		radio_write8(AX5043_REG_TXRATE1, 0x00, hspi);
 		radio_write8(AX5043_REG_TXRATE0, 0x01, hspi);
@@ -29,14 +29,14 @@ uint8_t AX_Radio_Init(SPI_HandleTypeDef * hspi)
 		radio_write8(AX5043_REG_FREQA1, (freq >> 8), hspi);
 		radio_write8(AX5043_REG_FREQA2, (freq >> 16), hspi);
 		radio_write8(AX5043_REG_FREQA3, (freq >> 24), hspi);
-		radio_write8(AX5043_REG_PWRMODE, AX_RADIO_Get_Pwrmode_Upper(hspi) | AX5043_PWRSTATE_SYNTH_TX, hspi);
+		radio_write8(AX5043_REG_PWRMODE, AX_Radio_Get_Pwrmode_Upper(hspi) | AX5043_PWRSTATE_SYNTH_TX, hspi);
 		HAL_Delay(1000); //One second delay for XTAL settling. Minimum should be 500ms
-		axradio_calvcoi(hspi);
+		//axradio_calvcoi(hspi); //This subroutine may not be necessary
 
 		extern uint8_t * axradio_phy_chanpllrng;
 
 		if (AX_Radio_Range_PLL(hspi)) {
-			//return AXRADIO_ERR_RANGING;
+			return AXRADIO_ERR_RANGING;
 		}
 
 		axradio_phy_chanpllrng[0] = radio_read8(AX5043_REG_PLLRANGINGA, hspi);
@@ -52,9 +52,25 @@ uint8_t AX_Radio_Init(SPI_HandleTypeDef * hspi)
 		}
 
 		HAL_Delay(3000);
-		radio_write8(AX5043_REG_PWRMODE, AX_RADIO_Get_Pwrmode_Upper(hspi) | AX5043_PWRSTATE_FULL_TX, hspi);
+		radio_write8(AX5043_REG_PWRMODE, AX_Radio_Get_Pwrmode_Upper(hspi) | AX5043_PWRSTATE_FULL_TX, hspi);
 		return 0;
 	}
+
+uint8_t AX_Radio_Init2(SPI_HandleTypeDef * hspi)
+{
+	//AX_Radio_Reset(hspi);
+	radio_write8(AX5043_REG_PWRMODE, AX_Radio_Get_Pwrmode_Upper(hspi) | AX5043_PWRSTATE_XTAL_ON, hspi);
+	AX_Radio_Set_Registers_TXCW(hspi);
+	radio_write8(AX5043_REG_PWRMODE, AX_Radio_Get_Pwrmode_Upper(hspi) | AX5043_PWRSTATE_SYNTH_TX, hspi);
+	HAL_Delay(1000);
+	if (AX_Radio_Range_PLL(hspi)) {
+		return AXRADIO_ERR_RANGING;
+	}
+	HAL_Delay(3000);
+	//radio_write8(AX5043_REG_PWRMODE, AX5043_PWRSTATE_FULL_TX, hspi);
+	return 0;
+}
+
 
 uint16_t AX_Radio_Get_Status(SPI_HandleTypeDef * hspi)
 {
@@ -77,20 +93,23 @@ uint8_t AX_Radio_Check_PLL_Lock(SPI_HandleTypeDef * hspi)
 
 uint8_t AX_Radio_Range_PLL(SPI_HandleTypeDef * hspi)
 {
-	radio_write8(AX5043_REG_PLLRANGINGA, 0x18, hspi);
 	uint8_t pll_contents;
+	radio_write8(AX5043_REG_PLLRANGINGA, 0x18, hspi);
 	do
 	{
 		pll_contents = radio_read8(AX5043_REG_PLLRANGINGA, hspi);
 		if(pll_contents & 0x20) {
 			return pll_contents;	//Range error
 		}
-		if(pll_contents & 0x40) {
-			return 0;				//Range lock
-		}
 	}
 	while (pll_contents & 0x10);
-	return 0; //Ideally this should be dead code... Make error?
+	HAL_Delay(100);
+	if(pll_contents & 0x40) {
+		return 0;				//Range lock
+	} else if (pll_contents & 0x20) {
+		return pll_contents;	//Range error
+	}
+	else return 0; //Ideally this should be dead code... Make error?
 }
 
 uint8_t AX_Radio_Reset(SPI_HandleTypeDef * hspi)
