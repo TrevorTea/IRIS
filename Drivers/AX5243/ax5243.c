@@ -396,7 +396,7 @@ uint8_t AX_Radio_Get_Pwrmode_Upper(SPI_HandleTypeDef * hspi)
 uint8_t AX_Radio_Set_Registers_TXCW(SPI_HandleTypeDef * hspi)
 {
 	radio_write8(AX5043_REG_MODULATION, 0x08, hspi);
-	radio_write8(AX5043_REG_PINFUNCSYSCLK, 0x04, hspi);
+//	radio_write8(AX5043_REG_PINFUNCSYSCLK, 0x04, hspi); // This causes crosstalk with external inductor in V1 PCB
 	radio_write8(AX5043_REG_TXPWRCOEFFB1, 0x0F, hspi);
 	radio_write8(AX5043_REG_TXPWRCOEFFB0, 0xFF, hspi);
 	radio_write8(AX5043_REG_XTALOSC, 0x03, hspi);
@@ -424,5 +424,34 @@ uint8_t AX_Radio_Set_Registers_TXCW(SPI_HandleTypeDef * hspi)
 	radio_write8(AX5043_REG_0xF34, 0x28, hspi);
 	radio_write8(AX5043_REG_0xF35, 0x10, hspi);
 	radio_write8(AX5043_REG_0xF44, 0x24, hspi);
+
+	// NOTE: There is currently an intermittent bug where the PLL will lose its
+	// lock but find it again @ 433 MHz. This may be remediated by updating the
+	// FIFO every now and probably setting up encoding and framing properly.
+	// ------- Crispin starts filling the FIFO here -------
+	uint8_t fakePreamble = 0x55;
+	uint8_t numBytesToSend = 100;
+	uint8_t fakePayload = 0xAA;
+
+	/* Radio Control for Sending Packets*/
+	radio_write8(AX5043_REG_FIFOSTAT, 0x03, hspi); // clear FIFO
+
+	// preamble
+	radio_write8(AX5043_REG_FIFODATA, 0x62, hspi); // REPEATDATA command
+	radio_write8(AX5043_REG_FIFODATA, 0x18, hspi); // bypass framing & encoding, suppress CRC, no pkt start/end
+	radio_write8(AX5043_REG_FIFODATA, 0x14, hspi); // repeat byte given in next command 20 times
+	radio_write8(AX5043_REG_FIFODATA, fakePreamble, hspi); // byte to be sent 10 times
+
+	// frame
+	radio_write8(AX5043_REG_FIFODATA, 0xE1, hspi); // TX Data command
+	radio_write8(AX5043_REG_FIFODATA, (numBytesToSend+1), hspi); // 100 bytes +1 for control field byte
+	radio_write8(AX5043_REG_FIFODATA, 0x03, hspi); // pkt start/end used here
+	for (uint8_t i = 0; i < numBytesToSend; i++)
+		radio_write8(AX5043_REG_FIFODATA, fakePayload, hspi);
+
+	// commit
+	radio_write8(AX5043_REG_FIFOSTAT, 0x04, hspi);
+	// ------- Crispin stopped messing with the FIFO here -------
+
 	return AXRADIO_ERR_NOERROR;
 }

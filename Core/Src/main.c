@@ -89,71 +89,72 @@ static void MX_SPI1_Init(void);
   */
 int main(void)
 {
-  /* USER CODE BEGIN 1 */
+	/* USER CODE BEGIN 1 */
 
-  /* USER CODE END 1 */
+	/* USER CODE END 1 */
 
-  /* MCU Configuration--------------------------------------------------------*/
+	/* MCU Configuration--------------------------------------------------------*/
 
-  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+	/* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+	HAL_Init();
 
-  /* USER CODE BEGIN Init */
+	/* USER CODE BEGIN Init */
 
-  /* USER CODE END Init */
+	/* USER CODE END Init */
 
-  /* Configure the system clock */
-  SystemClock_Config();
+	/* Configure the system clock */
+	SystemClock_Config();
 
-  /* USER CODE BEGIN SysInit */
+	/* USER CODE BEGIN SysInit */
 
-  /* USER CODE END SysInit */
+	/* USER CODE END SysInit */
 
-  /* Initialize all configured peripherals */
-  MX_GPIO_Init();
-  MX_USART2_UART_Init();
-  MX_SPI1_Init();
-  /* USER CODE BEGIN 2 */
-  int upTime = 0;
-  uint8_t status = 0;
-  uint8_t data = 0;
+	/* Initialize all configured peripherals */
+	MX_GPIO_Init();
+	MX_USART2_UART_Init();
+	MX_SPI1_Init();
+	/* USER CODE BEGIN 2 */
+	int upTime = 0;
+	uint8_t status = 0;
+	uint8_t data = 0;
 
-  uint8_t sil_rev_short = 0b0000000;
+	uint8_t sil_rev_short = 0b0000000;
 
 
-  printf("Checking Silicon Rev Bits\n\r");
-  AX_Radio_RW_Short_Address(&sil_rev_short, &status, &data, &hspi1, 0xff, 0);
-  upTime++;
-  printf("Sys Uptime: %d\n\r", upTime);
-  printf("Status Bits: %x\n\r", status);
-  printf("Silicon Rev Bits: %x\n\n\r", data);
-  HAL_Delay(3000);
+	printf("Checking Silicon Rev Bits\n\r");
+	AX_Radio_RW_Short_Address(&sil_rev_short, &status, &data, &hspi1, 0xff, 0);
+	upTime++;
+	printf("Sys Uptime: %d\n\r", upTime);
+	printf("Status Bits: %x\n\r", status);
+	printf("Silicon Rev Bits: %x\n\n\r", data);
+	HAL_Delay(3000);
 
-  printf("Attempting to init radio in full transmit @ 433MHz\n\r");
-  int init_status = AX_Radio_Init2(&hspi1);
-  printf("Result: %d\n\r", init_status);
-  printf("Entering eternal loop\n\n\r");
-  /* USER CODE END 2 */
+	printf("Attempting to init radio in full transmit @ 433MHz\n\r");
+	int init_status = AX_Radio_Init2(&hspi1);
+	printf("Result: %d\n\r", init_status);
+	printf("Entering eternal loop\n\n\r");
+	/* USER CODE END 2 */
 
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
-  while (1)
-  {
-    /* USER CODE END WHILE */
+	/* Infinite loop */
+	/* USER CODE BEGIN WHILE */
+	while (1)
+	{
+		/* USER CODE END WHILE */
 
-    /* USER CODE BEGIN 3 */
-	  printf("AX Status %x\n\r", AX_Radio_Get_Status(&hspi1));
-	  printf("PLL Status %x\n\r", AX_Radio_Check_PLL(&hspi1));
-	  upTime++;
-	  HAL_Delay(1000);
-	  if (upTime == 10) {
+		/* USER CODE BEGIN 3 */
+		printf("AX Status %x\n\r", AX_Radio_Get_Status(&hspi1));
+		printf("PLL Status %x\n\r", AX_Radio_Check_PLL(&hspi1));
+		upTime++;
+		HAL_Delay(1000);
+		if (upTime == 10) {
 		  printf("Switching to full TX\n\r");
 		  radio_write8(AX5043_REG_PWRMODE, AX_Radio_Get_Pwrmode_Upper(&hspi1) | AX5043_PWRSTATE_FULL_TX, &hspi1);
-	  }
+		  while((radio_read8(AX5043_REG_POWSTAT, &hspi1) & (1<<3)) == 0); // Wait for changes to settle
+		}
 
-  }
+	}
 
-  /* USER CODE END 3 */
+	/* USER CODE END 3 */
 }
 
 /**

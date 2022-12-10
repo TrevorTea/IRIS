@@ -59,15 +59,12 @@ uint8_t AX_Radio_Init(SPI_HandleTypeDef * hspi)
 uint8_t AX_Radio_Init2(SPI_HandleTypeDef * hspi)
 {
 	//AX_Radio_Reset(hspi);
-	radio_write8(AX5043_REG_PWRMODE, AX_Radio_Get_Pwrmode_Upper(hspi) | AX5043_PWRSTATE_XTAL_ON, hspi);
 	AX_Radio_Set_Registers_TXCW(hspi);
-	radio_write8(AX5043_REG_PWRMODE, AX_Radio_Get_Pwrmode_Upper(hspi) | AX5043_PWRSTATE_SYNTH_TX, hspi);
 	HAL_Delay(1000);
 	if (AX_Radio_Range_PLL(hspi)) {
 		return AXRADIO_ERR_RANGING;
 	}
 	HAL_Delay(3000);
-	//radio_write8(AX5043_REG_PWRMODE, AX5043_PWRSTATE_FULL_TX, hspi);
 	return 0;
 }
 

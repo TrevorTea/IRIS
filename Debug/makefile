@@ -61,8 +61,8 @@ all: main-build
 main-build: L4Initial.elf secondary-outputs
 
 # Tool invocations
-L4Initial.elf L4Initial.map: $(OBJS) $(USER_OBJS) C:\Users\thoma\OneDrive\Documents\School\ Docs\Capstone\Programming\L4Initial\L4Initial\STM32L412RBTXP_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "L4Initial.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\thoma\OneDrive\Documents\School Docs\Capstone\Programming\L4Initial\L4Initial\STM32L412RBTXP_FLASH.ld" --specs=nosys.specs -Wl,-Map="L4Initial.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+L4Initial.elf L4Initial.map: $(OBJS) $(USER_OBJS) C:\Users\14025\OneDrive\ -\ University\ of\ Nebraska\ at\ Omaha\Classes\FA22\ECEN\ 494\ -\ Capstone\ 1\IRIS\IRIS\STM32L412RBTXP_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "L4Initial.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\14025\OneDrive - University of Nebraska at Omaha\Classes\FA22\ECEN 494 - Capstone 1\IRIS\IRIS\STM32L412RBTXP_FLASH.ld" --specs=nosys.specs -Wl,-Map="L4Initial.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
