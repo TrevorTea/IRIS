@@ -7,56 +7,7 @@
 
 #include "ax5243_api.h"
 
-
 uint8_t AX_Radio_Init(SPI_HandleTypeDef * hspi)
-	{
-		radio_write8(AX5043_REG_PWRMODE, AX_Radio_Get_Pwrmode_Upper(hspi) | AX5043_PWRSTATE_XTAL_ON, hspi);
-		AX_Radio_Set_Registers(hspi);
-		AX_Radio_Set_Registers_TX(hspi);
-		//AX_Radio_Set_Registers_Common(hspi);	//may not be necessary
-		radio_write8(AX5043_REG_MODULATION, 8, hspi);   // Set an FSK mode
-		radio_write8(AX5043_REG_FSKDEV2, 0x00, hspi);
-		radio_write8(AX5043_REG_FSKDEV1, 0x00, hspi);
-		radio_write8(AX5043_REG_FSKDEV0, 0x10, hspi);
-		radio_write8(AX5043_REG_TXRATE2, 0x00, hspi);
-		radio_write8(AX5043_REG_TXRATE1, 0x00, hspi);
-		radio_write8(AX5043_REG_TXRATE0, 0x01, hspi);
-		radio_write8(AX5043_REG_PINFUNCDATA, 0x04, hspi);
-
-		extern uint32_t axradio_phy_chanfreq[1];
-		uint32_t freq = axradio_phy_chanfreq[0];
-		radio_write8(AX5043_REG_FREQA0, freq, hspi);
-		radio_write8(AX5043_REG_FREQA1, (freq >> 8), hspi);
-		radio_write8(AX5043_REG_FREQA2, (freq >> 16), hspi);
-		radio_write8(AX5043_REG_FREQA3, (freq >> 24), hspi);
-		radio_write8(AX5043_REG_PWRMODE, AX_Radio_Get_Pwrmode_Upper(hspi) | AX5043_PWRSTATE_SYNTH_TX, hspi);
-		HAL_Delay(1000); //One second delay for XTAL settling. Minimum should be 500ms
-		//axradio_calvcoi(hspi); //This subroutine may not be necessary
-
-		extern uint8_t * axradio_phy_chanpllrng;
-
-		if (AX_Radio_Range_PLL(hspi)) {
-			return AXRADIO_ERR_RANGING;
-		}
-
-		axradio_phy_chanpllrng[0] = radio_read8(AX5043_REG_PLLRANGINGA, hspi);
-		radio_write8(AX5043_REG_PLLLOOP, (radio_read8(AX5043_REG_PLLLOOP, hspi) | 0x04), hspi);
-		//Hidden register manipulation. If God asked me what this did I would have no answer
-		{
-			radio_write8(AX5043_REG_0xF35, 0x11, hspi);
-//				uint8_t x = radio_read8(AX5043_REG_0xF35, hspi);
-//				x |= 0x80;
-//				if (2 & (uint8_t)~x)
-//					++x;
-//				radio_write8(AX5043_REG_0xF35, x, hspi);
-		}
-
-		HAL_Delay(3000);
-		radio_write8(AX5043_REG_PWRMODE, AX_Radio_Get_Pwrmode_Upper(hspi) | AX5043_PWRSTATE_FULL_TX, hspi);
-		return 0;
-	}
-
-uint8_t AX_Radio_Init2(SPI_HandleTypeDef * hspi)
 {
 	//AX_Radio_Reset(hspi);
 	AX_Radio_Set_Registers_TXCW(hspi);

@@ -19,13 +19,6 @@
 	uint8_t AX_Radio_Init(SPI_HandleTypeDef * hspi);
 
 	/**
-	 * @brief Initializes the AX Radio
-	 * @param hspi hspi handle
-	 * @retval status 0 indicates success
-	 */
-	uint8_t AX_Radio_Init2(SPI_HandleTypeDef * hspi);
-
-	/**
 	 * @brief Returns the AX Radios status bits
 	 * @param hspi hspi handle
 	 * @retval 16 bit status returned from SPI read

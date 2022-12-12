@@ -58,51 +58,6 @@
 	uint8_t radio_read8(uint16_t reg, SPI_HandleTypeDef * hspi);
 
 	/**
-	 * @brief Sets AX Radio's initial register values
-	 * @param hspi hspi handle
-	 */
-	void AX_Radio_Set_Registers(SPI_HandleTypeDef * hspi);
-
-
-	/**
-	 * @brief Sets AX Radio's transmitter specific registers
-	 * @param hspi hspi handle
-	 */
-	void AX_Radio_Set_Registers_TX(SPI_HandleTypeDef * hspi);
-
-	/**
-	 * @brief Sets AX Radio's receiver specific registers
-	 * @param hspi hspi handle
-	 */
-	void AX_Radio_Set_Registers_RX(SPI_HandleTypeDef * hspi);
-
-	/**
-	 * @brief Sets AX Radio's packet settings and preamble
-	 * @param hspi hspi handle
-	 */
-	void AX_Radio_Set_Registers_RXWOR(SPI_HandleTypeDef * hspi);
-
-	/**
-	 * @brief Sets AX Radio's frequency deviations and AGC gain
-	 * @param hspi hspi handle
-	 */
-	void AX_Radio_Set_Registers_RXWOR_SingleParamset(SPI_HandleTypeDef * hspi);
-
-	/**
-	 * @brief Assists in calibrating the vcoi
-	 * @param hspi hspi handle
-	 * @retval status 0 indicates success
-	 */
-	uint8_t axradio_calvcoi(SPI_HandleTypeDef * hspi);
-
-	/**
-		 * @brief Common register init
-		 * @param hspi hspi handle
-		 * @retval status 0 indicates success
-		 */
-	uint8_t AX_Radio_Set_Registers_Common(SPI_HandleTypeDef * hspi);
-
-	/**
 	 	 * @brief Read power mode register
 		 * @param hspi hspiu handle 
 		 * @retval AX Radio powermode register contents
