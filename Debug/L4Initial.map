@@ -5709,28 +5709,28 @@ LOAD c:/program files/st/stm32cubeide_1.11.0/stm32cubeide/plugins/com.st.stm32cu
  .debug_macro   0x000000000001c8ee       0x58 ./Middlewares/Third_Party/FatFs/src/ff.o
  .debug_macro   0x000000000001c946      0x2fa ./Middlewares/Third_Party/FatFs/src/ff_gen_drv.o
 
-.debug_line     0x0000000000000000    0x14874
- .debug_line    0x0000000000000000      0xdd1 ./Core/Src/main.o
- .debug_line    0x0000000000000dd1      0x84d ./Core/Src/stm32l4xx_hal_msp.o
- .debug_line    0x000000000000161e      0x820 ./Core/Src/stm32l4xx_it.o
- .debug_line    0x0000000000001e3e      0x938 ./Core/Src/syscalls.o
- .debug_line    0x0000000000002776      0x62e ./Core/Src/sysmem.o
- .debug_line    0x0000000000002da4      0x7f5 ./Core/Src/system_stm32l4xx.o
- .debug_line    0x0000000000003599       0x89 ./Core/Startup/startup_stm32l412rbtxp.o
- .debug_line    0x0000000000003622      0xabb ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.o
- .debug_line    0x00000000000040dd      0xcf4 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_cortex.o
- .debug_line    0x0000000000004dd1      0xb58 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_gpio.o
- .debug_line    0x0000000000005929      0xcb6 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr_ex.o
- .debug_line    0x00000000000065df     0x1052 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc.o
- .debug_line    0x0000000000007631     0x100b ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc_ex.o
- .debug_line    0x000000000000863c     0x1f87 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_spi.o
- .debug_line    0x000000000000a5c3     0x3283 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart.o
- .debug_line    0x000000000000d846      0xa31 ./FATFS/App/fatfs.o
- .debug_line    0x000000000000e277      0xa87 ./FATFS/Target/user_diskio.o
- .debug_line    0x000000000000ecfe     0x10ef ./FATFS/Target/user_diskio_spi.o
- .debug_line    0x000000000000fded      0xa8b ./Middlewares/Third_Party/FatFs/src/diskio.o
- .debug_line    0x0000000000010878     0x3553 ./Middlewares/Third_Party/FatFs/src/ff.o
- .debug_line    0x0000000000013dcb      0xaa9 ./Middlewares/Third_Party/FatFs/src/ff_gen_drv.o
+.debug_line     0x0000000000000000    0x1486e
+ .debug_line    0x0000000000000000      0xdcb ./Core/Src/main.o
+ .debug_line    0x0000000000000dcb      0x84d ./Core/Src/stm32l4xx_hal_msp.o
+ .debug_line    0x0000000000001618      0x820 ./Core/Src/stm32l4xx_it.o
+ .debug_line    0x0000000000001e38      0x938 ./Core/Src/syscalls.o
+ .debug_line    0x0000000000002770      0x62e ./Core/Src/sysmem.o
+ .debug_line    0x0000000000002d9e      0x7f5 ./Core/Src/system_stm32l4xx.o
+ .debug_line    0x0000000000003593       0x89 ./Core/Startup/startup_stm32l412rbtxp.o
+ .debug_line    0x000000000000361c      0xabb ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.o
+ .debug_line    0x00000000000040d7      0xcf4 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_cortex.o
+ .debug_line    0x0000000000004dcb      0xb58 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_gpio.o
+ .debug_line    0x0000000000005923      0xcb6 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr_ex.o
+ .debug_line    0x00000000000065d9     0x1052 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc.o
+ .debug_line    0x000000000000762b     0x100b ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc_ex.o
+ .debug_line    0x0000000000008636     0x1f87 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_spi.o
+ .debug_line    0x000000000000a5bd     0x3283 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart.o
+ .debug_line    0x000000000000d840      0xa31 ./FATFS/App/fatfs.o
+ .debug_line    0x000000000000e271      0xa87 ./FATFS/Target/user_diskio.o
+ .debug_line    0x000000000000ecf8     0x10ef ./FATFS/Target/user_diskio_spi.o
+ .debug_line    0x000000000000fde7      0xa8b ./Middlewares/Third_Party/FatFs/src/diskio.o
+ .debug_line    0x0000000000010872     0x3553 ./Middlewares/Third_Party/FatFs/src/ff.o
+ .debug_line    0x0000000000013dc5      0xaa9 ./Middlewares/Third_Party/FatFs/src/ff_gen_drv.o
 
 .debug_str      0x0000000000000000    0xa74ca
  .debug_str     0x0000000000000000    0xa1ba5 ./Core/Src/main.o
