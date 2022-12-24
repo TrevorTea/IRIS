@@ -44,6 +44,19 @@ uint8_t LCD_Read8(uint32_t addr, SPI_HandleTypeDef *hspi) {
 	return dataByte;
 }
 
+uint16_t LCD_Read16(uint32_t addr, SPI_HandleTypeDef *hspi) {
+	uint8_t dataBytes[2] = { 0, 0 };
+	//Begin read
+	LCD_Begin_Read(addr, hspi);
+	//Read single byte
+	HAL_SPI_Receive(hspi, dataBytes, 2, 0xFF);
+	//Bring chip select high
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, GPIO_PIN_SET);
+	uint16_t result = (dataBytes[1] << 8) | (dataBytes[0]);
+	return result;
+}
+
+
 uint32_t LCD_Read32(uint32_t addr, SPI_HandleTypeDef *hspi) {
 	uint8_t dataBytes[4] = { 0, 0, 0, 0 };
 	//Begin read
@@ -56,3 +69,9 @@ uint32_t LCD_Read32(uint32_t addr, SPI_HandleTypeDef *hspi) {
 			| (dataBytes[1] << 8) | (dataBytes[0]);
 	return result;
 }
+
+uint32_t LCD_Read_Chip_ID(SPI_HandleTypeDef *hspi) {
+	return LCD_Read32( 0xC0000, hspi);
+}
+
+

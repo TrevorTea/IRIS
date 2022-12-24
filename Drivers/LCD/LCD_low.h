@@ -44,11 +44,27 @@ HAL_StatusTypeDef LCD_Begin_Read(uint32_t addr, SPI_HandleTypeDef * hspi);
 uint8_t LCD_Read8(uint32_t addr, SPI_HandleTypeDef *hspi);
 
 /**
- * @brief Read a four bytes from the LCD
+ * @brief Read two bytes from the LCD
+ * @param addr 32 (24) bit address literal
+ * @param hspi hspi handle
+ * @retval Two bytes
+ */
+uint16_t LCD_Read16(uint32_t addr, SPI_HandleTypeDef *hspi);
+
+/**
+ * @brief Read four bytes from the LCD
  * @param addr 32 (24) bit address literal
  * @param hspi hspi handle
  * @retval Word received from LCD
  */
 uint32_t LCD_Read32(uint32_t addr, SPI_HandleTypeDef *hspi);
+
+/**
+ * @brief Read chip ID code from RAM_G
+ * @param hspi hspi handle
+ * @retval Chip identification code
+ */
+uint32_t LCD_Read_Chip_ID(SPI_HandleTypeDef *hspi);
+
 
 #endif
