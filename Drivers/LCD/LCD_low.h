@@ -8,6 +8,14 @@
 #ifndef LCD_LOW_H_
 #define LCD_LOW_H_
 
+/* Definition for memory map, see datasheet page 40 */
+#define RAM_G 			0x000000 	//General purpose graphics RAM
+#define ROM_FONT 		0x1E0000	//Font table
+#define ROM_FONT_ADDR	0x2FFFFC	//Font table pointer address
+#define RAM_DL			0x300000	//Display list RAM
+#define RAM_REG			0x302000	//Registers
+#define	RAM_CMD			0x308000	//Command Buffer
+
 #include "stm32l4xx_hal.h"
 
 /**
