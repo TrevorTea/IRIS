@@ -1,0 +1,4 @@
+../Drivers/LCD/LCD_low.c:9:19:LCD_Active_Mode	24	static
+../Drivers/LCD/LCD_low.c:22:9:LCD_Begin_Read	24	static
+../Drivers/LCD/LCD_low.c:36:9:LCD_Read8	24	static
+../Drivers/LCD/LCD_low.c:47:10:LCD_Read32	24	static

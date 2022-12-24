@@ -24,5 +24,6 @@ SUBDIRS := \
 Core/Src \
 Core/Startup \
 Drivers/AX5243 \
+Drivers/LCD \
 Drivers/STM32L4xx_HAL_Driver/Src \
 

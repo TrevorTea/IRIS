@@ -1,4 +1,4 @@
-Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
+Drivers/LCD/LCD_low.o: ../Drivers/LCD/LCD_low.c ../Drivers/LCD/LCD_low.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h \
  ../Core/Inc/stm32l4xx_hal_conf.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h \
@@ -28,14 +28,8 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi_ex.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h \
- ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h \
- ../Drivers/STM32L4xx_HAL_Driver/Inc/../../AX5243/ax5243.h \
- ../Drivers/STM32L4xx_HAL_Driver/Inc/../../AX5243/ax5243_registers.h \
- ../Drivers/STM32L4xx_HAL_Driver/Inc/../../AX5243/ax5243_macros.h \
- ../Drivers/STM32L4xx_HAL_Driver/Inc/../../AX5243/ax5243_api.h \
- ../Drivers/STM32L4xx_HAL_Driver/Inc/../../AX5243/ax5243.h \
- ../Drivers/STM32L4xx_HAL_Driver/Inc/../../LCD/LCD_low.h
-../Core/Inc/main.h:
+ ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h
+../Drivers/LCD/LCD_low.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h:
 ../Core/Inc/stm32l4xx_hal_conf.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h:
@@ -66,9 +60,3 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi_ex.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h:
-../Drivers/STM32L4xx_HAL_Driver/Inc/../../AX5243/ax5243.h:
-../Drivers/STM32L4xx_HAL_Driver/Inc/../../AX5243/ax5243_registers.h:
-../Drivers/STM32L4xx_HAL_Driver/Inc/../../AX5243/ax5243_macros.h:
-../Drivers/STM32L4xx_HAL_Driver/Inc/../../AX5243/ax5243_api.h:
-../Drivers/STM32L4xx_HAL_Driver/Inc/../../AX5243/ax5243.h:
-../Drivers/STM32L4xx_HAL_Driver/Inc/../../LCD/LCD_low.h:
