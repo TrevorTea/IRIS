@@ -27,23 +27,23 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
  11 .ARM.attributes 00000030  00000000  00000000  00020070  2**0
                   CONTENTS, READONLY
- 12 .debug_info   0000d162  00000000  00000000  000200a0  2**0
+ 12 .debug_info   0000d342  00000000  00000000  000200a0  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 13 .debug_abbrev 00001d31  00000000  00000000  0002d202  2**0
+ 13 .debug_abbrev 00001d42  00000000  00000000  0002d3e2  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_aranges 00000b70  00000000  00000000  0002ef38  2**3
+ 14 .debug_aranges 00000b98  00000000  00000000  0002f128  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_ranges 00000aa8  00000000  00000000  0002faa8  2**3
+ 15 .debug_ranges 00000ad0  00000000  00000000  0002fcc0  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_macro  0001b112  00000000  00000000  00030550  2**0
+ 16 .debug_macro  0001b112  00000000  00000000  00030790  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_line   0000df06  00000000  00000000  0004b662  2**0
+ 17 .debug_line   0000dfdf  00000000  00000000  0004b8a2  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    000a56a7  00000000  00000000  00059568  2**0
+ 18 .debug_str    000a56ec  00000000  00000000  00059881  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000050  00000000  00000000  000fec0f  2**0
+ 19 .comment      00000050  00000000  00000000  000fef6d  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  000035f0  00000000  00000000  000fec60  2**2
+ 20 .debug_frame  000036a4  00000000  00000000  000fefc0  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -1918,7 +1918,7 @@ HAL_StatusTypeDef LCD_Active_Mode(SPI_HandleTypeDef *hspi) {
 
 08000d3c <LCD_Begin_Read>:
 
-uint8_t LCD_Begin_Read(uint32_t addr, SPI_HandleTypeDef *hspi) {
+HAL_StatusTypeDef LCD_Begin_Read(uint32_t addr, SPI_HandleTypeDef *hspi) {
  8000d3c:	b580      	push	{r7, lr}
  8000d3e:	b084      	sub	sp, #16
  8000d40:	af00      	add	r7, sp, #0
