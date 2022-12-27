@@ -133,6 +133,9 @@ int main(void)
 		printf("C0001: %x\n\r", LCD_Read8(0x000C0001, &hspi1));
 		printf("C0000: %x\n\r", LCD_Read8(0x000C0000, &hspi1));
 		printf("302000: %x\n\r", LCD_Read8(0x00302000, &hspi1));
+		printf("Writing to RAM 0x1000: \n\r");
+		LCD_Write32(0x1000, 0xAA55FF66, &hspi1);
+		printf("Read Results from RAM 0x1000: %lx\n\r", LCD_Read32(0x1000, &hspi1));
 		HAL_Delay(1000);
 	}
 

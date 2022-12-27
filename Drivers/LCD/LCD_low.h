@@ -8,6 +8,8 @@
 #ifndef LCD_LOW_H_
 #define LCD_LOW_H_
 
+#include <stdlib.h>
+
 /* Definition for memory map, see datasheet page 40 */
 #define RAM_G 			0x000000 	//General purpose graphics RAM
 #define ROM_FONT 		0x1E0000	//Font table

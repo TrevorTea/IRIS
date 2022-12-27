@@ -21,8 +21,7 @@ HAL_StatusTypeDef LCD_Active_Mode(SPI_HandleTypeDef *hspi) {
 
 HAL_StatusTypeDef LCD_Begin_Read(uint32_t addr, SPI_HandleTypeDef *hspi) {
 	HAL_StatusTypeDef status;
-	uint8_t addrBytes[3] = { (addr >> 16) & 0xFF, (addr >> 8) & 0xFF, addr
-			& 0xFF };
+	uint8_t addrBytes[3] = { (addr >> 16) & 0xFF, (addr >> 8) & 0xFF, addr & 0xFF };
 	uint8_t dummyByte = 0;
 	//bring chip select low
 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, GPIO_PIN_RESET);
@@ -64,8 +63,7 @@ uint32_t LCD_Read32(uint32_t addr, SPI_HandleTypeDef *hspi) {
 	HAL_SPI_Receive(hspi, dataBytes, 4, 0xFF);
 	//Bring chip select high
 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, GPIO_PIN_SET);
-	uint32_t result = (dataBytes[3] << 24) | (dataBytes[2] << 16)
-			| (dataBytes[1] << 8) | (dataBytes[0]);
+	uint32_t result = (dataBytes[3] << 24) | (dataBytes[2] << 16) | (dataBytes[1] << 8) | (dataBytes[0]);
 	return result;
 }
 
@@ -86,13 +84,22 @@ HAL_StatusTypeDef LCD_Command(uint8_t cmd, uint8_t param,
 
 HAL_StatusTypeDef LCD_Begin_Write(uint32_t addr, SPI_HandleTypeDef *hspi) {
 	HAL_StatusTypeDef status;
-	uint8_t addrBytes[3] = { ((addr >> 16) & 0xFF) | 0x80, (addr >> 8) & 0xFF,
-			addr & 0xFF };
+	uint8_t addrBytes[3] = { ((addr >> 16) & 0xFF) | 0x80, (addr >> 8) & 0xFF, addr & 0xFF };
 	//bring chip select low
 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, GPIO_PIN_RESET);
 	//Ship address bytes
 	status = HAL_SPI_Transmit(hspi, addrBytes, 3, 0xFF);
 	return status;
+//	HAL_StatusTypeDef status;
+//	uint8_t * addrBytes = (uint8_t*) calloc(3, sizeof(char));
+//	addrBytes[0] = (addr >> 16 & 0xFF) | 0x80;
+//	addrBytes[1] = (addr >> 8) & 0xFF;
+//	addrBytes[2] = addr & 0xFF;
+//	uint8_t viewBytes [3] = {*(addrBytes), *(addrBytes + 1), *(addrBytes + 2)};
+//	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, GPIO_PIN_RESET);
+//	status = HAL_SPI_Transmit(hspi, addrBytes, 3, 0xFF);
+//	free(addrBytes);
+//	return status;
 }
 
 HAL_StatusTypeDef LCD_Write8(uint32_t addr, uint8_t data,
@@ -114,8 +121,7 @@ HAL_StatusTypeDef LCD_Write16(uint32_t addr, uint16_t data,
 
 HAL_StatusTypeDef LCD_Write32(uint32_t addr, uint32_t data,
 		SPI_HandleTypeDef *hspi) {
-	uint8_t payload[4] = { data & 0xFF, (data >> 8) & 0xFF, (data >> 16) & 0xFF,
-			(data >> 24) & 0xFF };
+	uint8_t payload[4] = { data & 0xFF, (data >> 8) & 0xFF, (data >> 16) & 0xFF, (data >> 24) & 0xFF };
 	HAL_StatusTypeDef status = LCD_Begin_Write(addr, hspi);
 	status |= HAL_SPI_Transmit(hspi, payload, 4, 0xFF);
 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, GPIO_PIN_SET);
