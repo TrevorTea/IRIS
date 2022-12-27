@@ -78,4 +78,52 @@
 	 */
 	uint8_t AX_Radio_Set_Registers_TXCW(SPI_HandleTypeDef * hspi);
 
+	/**
+	 	 * @brief Init AX Radio with minimum definitions for 27 MHz RX & TX
+	 	 * @param hspi hspi handle
+	 	 * @retval status 0 indicates success
+	 */
+	uint8_t AX_Radio_27_MHz_Settings(SPI_HandleTypeDef * hspi);
+
+	/**
+	 	 * @brief Init AX Radio with minimum definitions for 169 MHz RX & TX
+	 	 * @param hspi hspi handle
+	 	 * @retval status 0 indicates success
+	 */
+	uint8_t AX_Radio_169_MHz_Settings(SPI_HandleTypeDef * hspi);
+
+	/**
+	 	 * @brief Init AX Radio with minimum definitions for 915 MHz RX & TX
+	 	 * @param hspi hspi handle
+	 	 * @retval status 0 indicates success
+	 */
+	uint8_t AX_Radio_915_MHz_Settings(SPI_HandleTypeDef * hspi);
+
+	/**
+	 	 * @brief Init AX Radio with minimum definitions for 915 MHz RX & TX
+	 	 * @param freq center frequency in MHz
+	 	 * @param hspi hspi handle
+	 	 * @retval status 0 indicates success
+	 */
+	uint8_t AX_Radio_Set_Center_Frequency(uint32_t freq, SPI_HandleTypeDef * hspi);
+
+	/**
+	 	 * @brief Init AX Radio with minimum definitions for 915 MHz RX & TX
+	 	 * @param rate data rate used to calculate FSK deviation
+	 	 * @param hspi hspi handle
+	 	 * @retval status 0 indicates success
+	 */
+	uint8_t AX_Radio_Set_Frequency_Deviation(uint32_t rate, SPI_HandleTypeDef * hspi);
+
+	/**
+	 	 * @brief Init AX Radio with minimum definitions for 915 MHz RX & TX
+	 	 * @param rw RX rate = 0, TX rate = 1
+	 	 * @param rate RX/TX rate
+	 	 * @param hspi hspi handle
+	 	 * @retval status 0 indicates success
+	 */
+	uint8_t AX_Radio_Set_Data_Rate(uint8_t rw, uint32_t rate, SPI_HandleTypeDef * hspi);
+
+
+
 #endif /* AX5243_AX5243_H_ */

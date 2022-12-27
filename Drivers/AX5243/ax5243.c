@@ -106,8 +106,7 @@ uint8_t AX_Radio_Set_Registers_TXCW(SPI_HandleTypeDef * hspi)
 	radio_write8(AX5043_REG_TXPWRCOEFFB0, 0xFF, hspi);
 	radio_write8(AX5043_REG_XTALOSC, 0x03, hspi);
 	radio_write8(AX5043_REG_XTALAMPL, 0x07, hspi);
-	radio_write8(AX5043_REG_PLLVCODIV, 0x04, hspi);
-	radio_write8(AX5043_REG_XTALCAP, 0x01, hspi);
+	radio_write8(AX5043_REG_XTALCAP, 0x08, hspi); // C_L = 12pF
 
 	radio_write8(AX5043_REG_FSKDEV2, 0x00, hspi);
 	radio_write8(AX5043_REG_FSKDEV1, 0x00, hspi);
@@ -126,7 +125,6 @@ uint8_t AX_Radio_Set_Registers_TXCW(SPI_HandleTypeDef * hspi)
 	radio_write8(AX5043_REG_0xF0D, 0x03, hspi);
 	radio_write8(AX5043_REG_0xF18, 0x06, hspi);
 	radio_write8(AX5043_REG_0xF1C, 0x07, hspi);
-	radio_write8(AX5043_REG_0xF34, 0x28, hspi);
 	radio_write8(AX5043_REG_0xF35, 0x10, hspi);
 	radio_write8(AX5043_REG_0xF44, 0x24, hspi);
 
@@ -158,5 +156,81 @@ uint8_t AX_Radio_Set_Registers_TXCW(SPI_HandleTypeDef * hspi)
 	radio_write8(AX5043_REG_FIFOSTAT, 0x04, hspi);
 	// ------- Crispin stopped messing with the FIFO here -------
 
+	return AXRADIO_ERR_NOERROR;
+}
+
+uint8_t AX_Radio_27_MHz_Settings(SPI_HandleTypeDef * hspi)
+{
+	radio_write8(AX5043_REG_PLLVCODIV, PLLVCODIV_EXTERNAL_INDUCTOR |
+			PLLVCODIV_RFDIV_ON, hspi);
+	radio_write8(AX5043_REG_0xF34, F34_RFDIV_ON, hspi);
+
+	// 27 MHz, allowable range is 26.957 MHz to 27.283 MHz, max BW = 40kHz
+	uint32_t fc = 27;
+	uint8_t AX_Radio_Set_Center_Frequency(fc, hspi);
+	return AXRADIO_ERR_NOERROR;
+}
+
+uint8_t AX_Radio_169_MHz_Settings(SPI_HandleTypeDef * hspi)
+{
+	radio_write8(AX5043_REG_PLLVCODIV, PLLVCODIV_EXTERNAL_INDUCTOR |
+			PLLVCODIV_RFDIV_OFF, hspi);
+	radio_write8(AX5043_REG_0xF34, F34_RFDIV_OFF, hspi);
+
+	// 169 MHz, BW = idk
+	// I cannot find the laws on legality on this for the fucking life of me, yolo ig
+	uint32_t fc = 169;
+	uint8_t AX_Radio_Set_Center_Frequency(fc, hspi);
+	return AXRADIO_ERR_NOERROR;
+}
+
+uint8_t AX_Radio_915_MHz_Settings(SPI_HandleTypeDef * hspi)
+{
+	radio_write8(AX5043_REG_PLLVCODIV, PLLVCODIV_INTERNAL_INDUCTOR |
+			PLLVCODIV_RFDIV_OFF, hspi);
+	radio_write8(AX5043_REG_0xF34, F34_RFDIV_OFF, hspi);
+
+	// 915 MHz, range of 902 MHz to 928 Mhz, max BW of 26 MHz
+	uint32_t fc = 915;
+	uint8_t AX_Radio_Set_Center_Frequency(fc, hspi);
+	return AXRADIO_ERR_NOERROR;
+}
+
+uint8_t AX_Radio_Set_Center_Frequency(uint32_t freq, SPI_HandleTypeDef * hspi)
+{
+	printf("Setting AX5243 to %ld MHz",freq);
+	freq *= (1<<20); // freq=fc/fxtal*(2^24) | since fxtal=16MHz, freq=fc*(2^20)
+	radio_write8(AX5043_REG_FREQA0, freq, hspi);
+	radio_write8(AX5043_REG_FREQA1, (freq >> 8), hspi);
+	radio_write8(AX5043_REG_FREQA2, (freq >> 16), hspi);
+	radio_write8(AX5043_REG_FREQA3, (freq >> 24), hspi);
+	return AXRADIO_ERR_NOERROR;
+}
+
+uint8_t AX_Radio_Set_Frequency_Deviation(uint32_t rate, SPI_HandleTypeDef * hspi)
+{
+	uint32_t dev = (rate>>2)*(1<<20); // FSKDEV = m * 0.5 * BITRATE / fxtal * (2^24), m(odulation index)=0.5, fxtal = 16 MHz
+	radio_write8(AX5043_REG_FSKDEV0, dev, hspi);
+	radio_write8(AX5043_REG_FSKDEV1, (dev >> 8), hspi);
+	radio_write8(AX5043_REG_FSKDEV2, (dev >> 16), hspi);
+	return AXRADIO_ERR_NOERROR;
+}
+
+uint8_t AX_Radio_Set_Data_Rate(uint8_t rw, uint32_t rate, SPI_HandleTypeDef * hspi)
+{
+	if (rw)
+	{
+		radio_write8(AX5043_REG_TXRATE0, rate, hspi);
+		radio_write8(AX5043_REG_TXRATE1, (rate >> 8), hspi);
+		radio_write8(AX5043_REG_TXRATE2, (rate >> 16), hspi);
+	}
+	else
+	{
+		// TODO: properly implement the receive data rate
+		// NOTE: dependent on fxtal, fxtaldiv, data rate, and decimation...
+		radio_write8(AX5043_REG_RXDATARATE0, rate, hspi);
+		radio_write8(AX5043_REG_RXDATARATE1, (rate >> 8), hspi);
+		radio_write8(AX5043_REG_RXDATARATE2, (rate >> 16), hspi);
+	}
 	return AXRADIO_ERR_NOERROR;
 }

@@ -35,17 +35,28 @@
 #define AX5043_FIFOCMD_TXPWR                0x1D
 
 //errors
-#define AXRADIO_ERR_NOERROR                     0x00
-#define AXRADIO_ERR_NOTSUPPORTED                0x01
-#define AXRADIO_ERR_BUSY                        0x02
-#define AXRADIO_ERR_TIMEOUT                     0x03
-#define AXRADIO_ERR_INVALID                     0x04
-#define AXRADIO_ERR_NOCHIP                      0x05
-#define AXRADIO_ERR_RANGING                     0x06
-#define AXRADIO_ERR_LOCKLOST                    0x07
-#define AXRADIO_ERR_RETRANSMISSION              0x08
-#define AXRADIO_ERR_RESYNC                      0x09
-#define AXRADIO_ERR_RESYNCTIMEOUT               0x0a
-#define AXRADIO_ERR_RECEIVESTART                0x0b
+#define AXRADIO_ERR_NOERROR                 0x00
+#define AXRADIO_ERR_NOTSUPPORTED            0x01
+#define AXRADIO_ERR_BUSY                    0x02
+#define AXRADIO_ERR_TIMEOUT                 0x03
+#define AXRADIO_ERR_INVALID                 0x04
+#define AXRADIO_ERR_NOCHIP                  0x05
+#define AXRADIO_ERR_RANGING                 0x06
+#define AXRADIO_ERR_LOCKLOST                0x07
+#define AXRADIO_ERR_RETRANSMISSION          0x08
+#define AXRADIO_ERR_RESYNC                  0x09
+#define AXRADIO_ERR_RESYNCTIMEOUT           0x0a
+#define AXRADIO_ERR_RECEIVESTART            0x0b
+
+// RF settings
+#define PLLVCODIV_RFDIV_ON					0x04
+#define PLLVCODIV_RFDIV_OFF					0x00
+#define PLLVCODIV_INTERNAL_INDUCTOR			0x00
+#define PLLVCODIV_EXTERNAL_INDUCTOR			0x30
+
+#define F34_RFDIV_ON						0x28
+#define F34_RFDIV_OFF						0x08
+
+
 
 #endif /* AX5243_AX5243_MACROS_H_ */
