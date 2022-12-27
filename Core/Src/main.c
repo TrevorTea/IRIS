@@ -126,7 +126,8 @@ int main(void) {
 	HAL_Delay(3000);
 
 	printf("Attempting to init radio in full transmit @ 433MHz\n\r");
-	int init_status = AX_Radio_Init(&hspi1);
+//	int init_status = AX_Radio_Init(&hspi1);
+	int init_status = AX_Radio_Full_Init(&hspi1);
 	printf("Result: %d\n\r", init_status);
 	printf("Entering eternal loop\n\n\r");
 	/* USER CODE END 2 */
@@ -137,19 +138,20 @@ int main(void) {
 		/* USER CODE END WHILE */
 
 		/* USER CODE BEGIN 3 */
+		printf("Switching to full TX\n\r");
+		AX_Radio_FIFO_Routine(&hspi1);
 		printf("AX Status %x\n\r", AX_Radio_Get_Status(&hspi1));
 		printf("PLL Status %x\n\r", AX_Radio_Check_PLL(&hspi1));
-		upTime++;
-		HAL_Delay(1000);
-		if (upTime == 10) {
-			printf("Switching to full TX\n\r");
-			radio_write8(AX5043_REG_PWRMODE,
-					AX_Radio_Get_Pwrmode_Upper(&hspi1) | AX5043_PWRSTATE_FULL_TX,
-					&hspi1);
-			while ((radio_read8(AX5043_REG_POWSTAT, &hspi1) & (1 << 3)) == 0)
-				; // Wait for changes to settle
-		}
 
+		// power down
+//		radio_write8(AX5043_REG_PWRMODE,
+//				AX_Radio_Get_Pwrmode_Upper(&hspi1) | AX5043_PWRSTATE_POWERDOWN,
+//				&hspi1);
+//		while ((radio_read8(AX5043_REG_POWSTAT, &hspi1) & (1 << 3)) == 0);
+//		radio_write8(AX5043_REG_PWRMODE,
+//				AX_Radio_Get_Pwrmode_Upper(&hspi1) | AX5043_PWRSTATE_FULL_TX,
+//				&hspi1);
+//		while ((radio_read8(AX5043_REG_POWSTAT, &hspi1) & (1 << 3)) == 0);
 	}
 
 	/* USER CODE END 3 */

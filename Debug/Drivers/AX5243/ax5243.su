@@ -5,9 +5,11 @@
 ../Drivers/AX5243/ax5243.c:91:9:AX_Radio_Get_Pwrmode	16	static
 ../Drivers/AX5243/ax5243.c:96:9:AX_Radio_Get_Pwrmode_Upper	16	static
 ../Drivers/AX5243/ax5243.c:101:9:AX_Radio_Set_Registers_TXCW	32	static
-../Drivers/AX5243/ax5243.c:162:9:AX_Radio_27_MHz_Settings	24	static
-../Drivers/AX5243/ax5243.c:174:9:AX_Radio_169_MHz_Settings	24	static
-../Drivers/AX5243/ax5243.c:187:9:AX_Radio_915_MHz_Settings	24	static
-../Drivers/AX5243/ax5243.c:199:9:AX_Radio_Set_Center_Frequency	16	static
-../Drivers/AX5243/ax5243.c:210:9:AX_Radio_Set_Frequency_Deviation	24	static
-../Drivers/AX5243/ax5243.c:219:9:AX_Radio_Set_Data_Rate	24	static
+../Drivers/AX5243/ax5243.c:164:9:AX_Radio_Data_Transmission_Setup	24	static
+../Drivers/AX5243/ax5243.c:193:9:AX_Radio_27_MHz_Settings	24	static
+../Drivers/AX5243/ax5243.c:205:9:AX_Radio_169_MHz_Settings	24	static
+../Drivers/AX5243/ax5243.c:221:9:AX_Radio_915_MHz_Settings	24	static
+../Drivers/AX5243/ax5243.c:233:9:AX_Radio_Set_Center_Frequency	16	static
+../Drivers/AX5243/ax5243.c:263:9:AX_Radio_Set_Frequency_Deviation	24	static
+../Drivers/AX5243/ax5243.c:272:9:AX_Radio_Set_Data_Rate	24	static
+../Drivers/AX5243/ax5243.c:291:9:AX_Radio_FIFO_Routine	1600	static

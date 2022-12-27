@@ -19,6 +19,15 @@ uint8_t AX_Radio_Init(SPI_HandleTypeDef * hspi)
 	return 0;
 }
 
+uint8_t AX_Radio_Full_Init(SPI_HandleTypeDef * hspi)
+{
+	AX_Radio_Data_Transmission_Setup(hspi);
+	if (AX_Radio_Range_PLL(hspi)) {
+			return AXRADIO_ERR_RANGING;
+	}
+	return 0;
+}
+
 
 uint16_t AX_Radio_Get_Status(SPI_HandleTypeDef * hspi)
 {

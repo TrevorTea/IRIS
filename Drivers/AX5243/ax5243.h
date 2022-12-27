@@ -79,6 +79,13 @@
 	uint8_t AX_Radio_Set_Registers_TXCW(SPI_HandleTypeDef * hspi);
 
 	/**
+	 	 * @brief Init AX Radio with minimum definitions for CW TX
+	 	 * @param hspi hspi handle
+	 	 * @retval status 0 indicates success
+	 */
+	uint8_t AX_Radio_Data_Transmission_Setup(SPI_HandleTypeDef * HSPI);
+
+	/**
 	 	 * @brief Init AX Radio with minimum definitions for 27 MHz RX & TX
 	 	 * @param hspi hspi handle
 	 	 * @retval status 0 indicates success
@@ -123,6 +130,13 @@
 	 	 * @retval status 0 indicates success
 	 */
 	uint8_t AX_Radio_Set_Data_Rate(uint8_t rw, uint32_t rate, SPI_HandleTypeDef * hspi);
+
+	/**
+	 	 * @brief Init AX Radio with minimum definitions for 169 MHz RX & TX
+	 	 * @param hspi hspi handle
+	 	 * @retval status 0 indicates success
+	 */
+	uint8_t AX_Radio_FIFO_Routine(SPI_HandleTypeDef * hspi);
 
 
 

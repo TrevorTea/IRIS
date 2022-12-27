@@ -75,9 +75,9 @@ uint8_t radio_read8(uint16_t reg, SPI_HandleTypeDef * hspi)
 	}
 
 // physical layer
-//const uint32_t  axradio_phy_chanfreq[1] = { 0x063b47bf };
+const uint32_t  axradio_phy_chanfreq[1] = { 0x063b47bf };
 //const uint32_t  axradio_phy_chanfreq[1] = { 0x0A900000 }; //169MHz @ 16MHz XTAL
-const uint32_t  axradio_phy_chanfreq[1] = { 0x1B100000 }; //433MHz @ 16MHz XTAL
+//const uint32_t  axradio_phy_chanfreq[1] = { 0x1B100000 }; //433MHz @ 16MHz XTAL
 const int8_t  axradio_phy_rssioffset = 64;
 // axradio_phy_rssioffset is added to AX5043_RSSIREFERENCE and subtracted from chip RSSI value to prevent overflows (8bit RSSI only goes down to -128)
 // axradio_phy_rssioffset is also added to AX5043_RSSIABSTHR
@@ -106,6 +106,7 @@ uint8_t AX_Radio_Set_Registers_TXCW(SPI_HandleTypeDef * hspi)
 	radio_write8(AX5043_REG_TXPWRCOEFFB0, 0xFF, hspi);
 	radio_write8(AX5043_REG_XTALOSC, 0x03, hspi);
 	radio_write8(AX5043_REG_XTALAMPL, 0x07, hspi);
+	radio_write8(AX5043_REG_PLLVCODIV, 0x30, hspi);
 	radio_write8(AX5043_REG_XTALCAP, 0x08, hspi); // C_L = 12pF
 
 	radio_write8(AX5043_REG_FSKDEV2, 0x00, hspi);
@@ -125,6 +126,7 @@ uint8_t AX_Radio_Set_Registers_TXCW(SPI_HandleTypeDef * hspi)
 	radio_write8(AX5043_REG_0xF0D, 0x03, hspi);
 	radio_write8(AX5043_REG_0xF18, 0x06, hspi);
 	radio_write8(AX5043_REG_0xF1C, 0x07, hspi);
+	radio_write8(AX5043_REG_0xF34, 0x08, hspi);
 	radio_write8(AX5043_REG_0xF35, 0x10, hspi);
 	radio_write8(AX5043_REG_0xF44, 0x24, hspi);
 
@@ -159,6 +161,35 @@ uint8_t AX_Radio_Set_Registers_TXCW(SPI_HandleTypeDef * hspi)
 	return AXRADIO_ERR_NOERROR;
 }
 
+uint8_t AX_Radio_Data_Transmission_Setup(SPI_HandleTypeDef * hspi)
+{
+	// Initially testing with 169 MHz
+	uint32_t rate = 9600; //9600bps
+	AX_Radio_169_MHz_Settings(hspi);
+	AX_Radio_Set_Data_Rate(1, rate, hspi);
+	AX_Radio_Set_Frequency_Deviation(rate, hspi);
+	radio_write8(AX5043_REG_MODULATION, 0x08, hspi);
+
+	// General XTAL Settings
+	radio_write8(AX5043_REG_XTALOSC, 0x03, hspi);
+	radio_write8(AX5043_REG_XTALAMPL, 0x07, hspi);
+	radio_write8(AX5043_REG_XTALCAP, 0x08, hspi); // C_L = 12pF
+
+	// Full power @ 16 dBm
+	radio_write8(AX5043_REG_TXPWRCOEFFB1, 0x0F, hspi);
+	radio_write8(AX5043_REG_TXPWRCOEFFB0, 0xFF, hspi);
+
+	// G3RUH encoding, HDLC framing, CCITT-16 CRC
+	radio_write8(AX5043_REG_ENCODING, 0x07, hspi); // differential encoding, bit inversion, scrambler
+	radio_write8(AX5043_REG_FRAMING, 0x14, hspi); // HDLC, CRC check in CCITT 16-bit
+	radio_write8(AX5043_REG_PKTLENCFG, 0xF0, hspi);
+	radio_write8(AX5043_REG_PKTMAXLEN, 0xFF, hspi);
+	radio_write8(AX5043_REG_PKTACCEPTFLAGS, 0x20, hspi);
+
+	// FIFOOOOOOOOOO but lets do it in main, kay?
+
+}
+
 uint8_t AX_Radio_27_MHz_Settings(SPI_HandleTypeDef * hspi)
 {
 	radio_write8(AX5043_REG_PLLVCODIV, PLLVCODIV_EXTERNAL_INDUCTOR |
@@ -179,8 +210,11 @@ uint8_t AX_Radio_169_MHz_Settings(SPI_HandleTypeDef * hspi)
 
 	// 169 MHz, BW = idk
 	// I cannot find the laws on legality on this for the fucking life of me, yolo ig
-	uint32_t fc = 169;
-	uint8_t AX_Radio_Set_Center_Frequency(fc, hspi);
+	uint32_t freq = 0x063b47bf; // freq=fc/fxtal*(2^24) | since fxtal=16MHz, freq=fc*(2^20)
+	radio_write8(AX5043_REG_FREQA0, freq, hspi);
+	radio_write8(AX5043_REG_FREQA1, (freq >> 8), hspi);
+	radio_write8(AX5043_REG_FREQA2, (freq >> 16), hspi);
+	radio_write8(AX5043_REG_FREQA3, (freq >> 24), hspi);
 	return AXRADIO_ERR_NOERROR;
 }
 
@@ -198,12 +232,31 @@ uint8_t AX_Radio_915_MHz_Settings(SPI_HandleTypeDef * hspi)
 
 uint8_t AX_Radio_Set_Center_Frequency(uint32_t freq, SPI_HandleTypeDef * hspi)
 {
-	printf("Setting AX5243 to %ld MHz",freq);
-	freq *= (1<<20); // freq=fc/fxtal*(2^24) | since fxtal=16MHz, freq=fc*(2^20)
-	radio_write8(AX5043_REG_FREQA0, freq, hspi);
-	radio_write8(AX5043_REG_FREQA1, (freq >> 8), hspi);
-	radio_write8(AX5043_REG_FREQA2, (freq >> 16), hspi);
-	radio_write8(AX5043_REG_FREQA3, (freq >> 24), hspi);
+	// need to replace 27 MHz crystals soon...
+	if (freq == 169)
+	{
+		freq = 0x063b47bf; // freq=fc/fxtal*(2^24) | since fxtal=16MHz, freq=fc*(2^20)
+		radio_write8(AX5043_REG_FREQA0, freq, hspi);
+		radio_write8(AX5043_REG_FREQA1, (freq >> 8), hspi);
+		radio_write8(AX5043_REG_FREQA2, (freq >> 16), hspi);
+		radio_write8(AX5043_REG_FREQA3, (freq >> 24), hspi);
+	}
+	else if (freq = 915)
+	{
+		freq = 0x21BD2B0B; // freq=fc/fxtal*(2^24) | since fxtal=16MHz, freq=fc*(2^20)
+		radio_write8(AX5043_REG_FREQA0, freq, hspi);
+		radio_write8(AX5043_REG_FREQA1, (freq >> 8), hspi);
+		radio_write8(AX5043_REG_FREQA2, (freq >> 16), hspi);
+		radio_write8(AX5043_REG_FREQA3, (freq >> 24), hspi);
+	}
+	else
+	{
+		freq *= (1<<20); // freq=fc/fxtal*(2^24) | since fxtal=16MHz, freq=fc*(2^20)
+		radio_write8(AX5043_REG_FREQA0, freq, hspi);
+		radio_write8(AX5043_REG_FREQA1, (freq >> 8), hspi);
+		radio_write8(AX5043_REG_FREQA2, (freq >> 16), hspi);
+		radio_write8(AX5043_REG_FREQA3, (freq >> 24), hspi);
+	}
 	return AXRADIO_ERR_NOERROR;
 }
 
@@ -232,5 +285,37 @@ uint8_t AX_Radio_Set_Data_Rate(uint8_t rw, uint32_t rate, SPI_HandleTypeDef * hs
 		radio_write8(AX5043_REG_RXDATARATE1, (rate >> 8), hspi);
 		radio_write8(AX5043_REG_RXDATARATE2, (rate >> 16), hspi);
 	}
+	return AXRADIO_ERR_NOERROR;
+}
+
+uint8_t AX_Radio_FIFO_Routine(SPI_HandleTypeDef * hspi)
+{
+	uint8_t preamble = 0x55;
+	uint8_t numBytesToSend = 100;
+	char beeData[] = "According to all known laws of aviation, there is no way a bee should be able to fly. Its wings are too small to get its fat little body off the ground. The bee, of course, flies anyway because bees don't care what humans think is impossible. Yellow, black. Yellow, black. Yellow, black. Yellow, black. Ooh, black and yellow! Let's shake it up a little. Barry! Breakfast is ready! Coming! Hang on a second. Hello? Barry? Adam? Can you believe this is happening? I can't. I'll pick you up. Looking sharp. Use the stairs, Your father paid good money for those. Sorry. I'm excited. Here's the graduate. We're very proud of you, son. A perfect report card, all B's. Very proud. Ma! I got a thing going here. You got lint on your fuzz. Ow! That's me! Wave to us! We'll be in row 118,000. Bye! Barry, I told you, stop flying in the house! Hey, Adam. Hey, Barry. Is that fuzz gel? A little. Special day, graduation. Never thought I'd make it. Three days grade school, three days high school. Those were awkward. Three days college. I'm glad I took a day and hitchhiked around The Hive. You did come back different. Hi, Barry. Artie, growing a mustache? Looks good. Hear about Frankie? Yeah. You going to the funeral? No, I'm not going. Everybody knows, sting someone, you die. Don't waste it on a squirrel. Such a hothead. I guess he could have just gotten out of the way. I love this incorporating an amusement park into our day. That's why we don't need vacations. Boy, quite a bit of pomp under the circumstances. Well, Adam, today we are men. We are! Bee-men. Amen! Hallelujah!";
+	/* Radio Control for Sending Packets*/
+//	radio_write8(AX5043_REG_PWRMODE, 0x67, hspi); // Enable FIFO
+	while ((radio_read8(AX5043_REG_POWSTAT, hspi) & (1 << 3)) == 0); // wait for pwrmode change to settle
+	radio_write8(AX5043_REG_FIFOSTAT, 0x03, hspi); // clear FIFO
+
+	// preamble
+	radio_write8(AX5043_REG_FIFODATA, 0x62, hspi); // REPEATDATA command
+	radio_write8(AX5043_REG_FIFODATA, 0x18, hspi); // bypass framing & encoding, suppress CRC, no pkt start/end
+	radio_write8(AX5043_REG_FIFODATA, 0x14, hspi); // repeat byte given in next command 20 times
+	radio_write8(AX5043_REG_FIFODATA, preamble, hspi); // byte to be sent 10 times
+
+	// frame
+	radio_write8(AX5043_REG_FIFODATA, 0xE1, hspi); // TX Data command
+	radio_write8(AX5043_REG_FIFODATA, (numBytesToSend+1), hspi); // 100 bytes +1 for control field byte
+	radio_write8(AX5043_REG_FIFODATA, 0x03, hspi); // pkt start/end used here
+	for (uint8_t i = 0; i < numBytesToSend; i++)
+		radio_write8(AX5043_REG_FIFODATA, beeData[i], hspi);
+
+	// commit
+	radio_write8(AX5043_REG_FIFOSTAT, 0x04, hspi);
+
+	// set to full tx
+	radio_write8(AX5043_REG_PWRMODE,0x6D,hspi);
+	while ((radio_read8(AX5043_REG_POWSTAT, hspi) & (1 << 3)) == 0)
 	return AXRADIO_ERR_NOERROR;
 }

@@ -1,7 +1,8 @@
 ../Drivers/AX5243/ax5243_api.c:10:9:AX_Radio_Init	16	static
-../Drivers/AX5243/ax5243_api.c:23:10:AX_Radio_Get_Status	32	static
-../Drivers/AX5243/ax5243_api.c:32:9:AX_Radio_Check_PLL	16	static
-../Drivers/AX5243/ax5243_api.c:37:9:AX_Radio_Check_PLL_Lock	16	static
-../Drivers/AX5243/ax5243_api.c:42:9:AX_Radio_Range_PLL	24	static
-../Drivers/AX5243/ax5243_api.c:63:9:AX_Radio_Reset	16	static
-../Drivers/AX5243/ax5243_api.c:70:9:AX_Radio_Poweroff	16	static
+../Drivers/AX5243/ax5243_api.c:22:9:AX_Radio_Full_Init	16	static
+../Drivers/AX5243/ax5243_api.c:32:10:AX_Radio_Get_Status	32	static
+../Drivers/AX5243/ax5243_api.c:41:9:AX_Radio_Check_PLL	16	static
+../Drivers/AX5243/ax5243_api.c:46:9:AX_Radio_Check_PLL_Lock	16	static
+../Drivers/AX5243/ax5243_api.c:51:9:AX_Radio_Range_PLL	24	static
+../Drivers/AX5243/ax5243_api.c:72:9:AX_Radio_Reset	16	static
+../Drivers/AX5243/ax5243_api.c:79:9:AX_Radio_Poweroff	16	static
