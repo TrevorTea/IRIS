@@ -6,15 +6,18 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../Drivers/AX5243/ax5243.c \
-../Drivers/AX5243/ax5243_api.c 
+../Drivers/AX5243/ax5243_api.c \
+../Drivers/AX5243/ax5243_report.c 
 
 OBJS += \
 ./Drivers/AX5243/ax5243.o \
-./Drivers/AX5243/ax5243_api.o 
+./Drivers/AX5243/ax5243_api.o \
+./Drivers/AX5243/ax5243_report.o 
 
 C_DEPS += \
 ./Drivers/AX5243/ax5243.d \
-./Drivers/AX5243/ax5243_api.d 
+./Drivers/AX5243/ax5243_api.d \
+./Drivers/AX5243/ax5243_report.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -24,7 +27,7 @@ Drivers/AX5243/%.o Drivers/AX5243/%.su: ../Drivers/AX5243/%.c Drivers/AX5243/sub
 clean: clean-Drivers-2f-AX5243
 
 clean-Drivers-2f-AX5243:
-	-$(RM) ./Drivers/AX5243/ax5243.d ./Drivers/AX5243/ax5243.o ./Drivers/AX5243/ax5243.su ./Drivers/AX5243/ax5243_api.d ./Drivers/AX5243/ax5243_api.o ./Drivers/AX5243/ax5243_api.su
+	-$(RM) ./Drivers/AX5243/ax5243.d ./Drivers/AX5243/ax5243.o ./Drivers/AX5243/ax5243.su ./Drivers/AX5243/ax5243_api.d ./Drivers/AX5243/ax5243_api.o ./Drivers/AX5243/ax5243_api.su ./Drivers/AX5243/ax5243_report.d ./Drivers/AX5243/ax5243_report.o ./Drivers/AX5243/ax5243_report.su
 
 .PHONY: clean-Drivers-2f-AX5243
 

@@ -55,5 +55,4 @@
 	 */
 	uint8_t AX_Radio_Poweroff(SPI_HandleTypeDef * hspi);
 
-
 #endif /* AX5243_AX5243_API_H_ */
