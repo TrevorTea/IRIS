@@ -5,14 +5,6 @@
  *  Created on: Dec 27, 2022
  */
 
-/**
- * @brief Structure for storing RSSI report types
- * @member time_struct c lib time structure for holding time and date
- * 		report was generated
- * @member ref* referential RSSI value
- * @member sut* structure under test RSSI value
- */
-
 #ifndef AX5243_AX5243_REPORT_H_
 #define AX5243_AX5243_REPORT_H_
 
@@ -21,6 +13,13 @@
 #include <time.h>
 #include <string.h>
 
+/**
+ * @brief Structure for storing RSSI report types
+ * @member time_struct c lib time structure for holding time and date
+ * 		report was generated
+ * @member ref* referential RSSI value
+ * @member sut* structure under test RSSI value
+ */
 struct RSSI_Report {
 	struct tm time_struct;
 	uint8_t ref27, ref169, ref915, ref24;
