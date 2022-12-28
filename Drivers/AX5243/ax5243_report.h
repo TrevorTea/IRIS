@@ -34,4 +34,12 @@ struct RSSI_Report {
  * @note Remember to deallocate string when finished
  */
 char* RSSI_Report_To_String(struct RSSI_Report report);
+
+/**
+ * @brief Generates a string JSON representing an RSSI report
+ * @param report RSSI report structure
+ * @retval pointer to formatted string
+ * @note Remember to deallocate string when finished
+ */
+char* RSSI_Report_To_JSON_Object(struct RSSI_Report report);
 #endif

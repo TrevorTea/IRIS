@@ -24,3 +24,25 @@ char* RSSI_Report_To_String(struct RSSI_Report report) {
 	free(substr);
 	return str;
 }
+
+char* RSSI_Report_To_JSON_Object(struct RSSI_Report report) {
+	char freq_format[] = "\"%d%c\" : {\n\"Ref RSSI\" : %d,\n\"Sut RSSI\" : %d\n}";
+	char *str = (char*) malloc(512 * sizeof(char));
+	char *objstr = (char*) malloc(128 * sizeof(char));
+	sprintf(str, "{\n\"Timestamp\" : \"%s\",\n", asctime(&report.time_struct));
+	sprintf(objstr, freq_format, 27, 'M', report.ref27, report.sut27);
+	str = strcat(str, objstr);
+	str = strcat(str, ",\n");
+	sprintf(objstr, freq_format, 169, 'M', report.ref169, report.sut169);
+	str = strcat(str, objstr);
+	str = strcat(str, ",\n");
+	sprintf(objstr, freq_format, 915, 'M', report.ref915, report.sut915);
+	str = strcat(str, objstr);
+	str = strcat(str, ",\n");
+	sprintf(objstr, freq_format, 915, 'G', report.ref915, report.sut915);
+	str = strcat(str, objstr);
+	str = strcat(str, "\n}");
+
+	free(objstr);
+	return str;
+}
