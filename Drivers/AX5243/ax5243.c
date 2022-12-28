@@ -187,7 +187,36 @@ uint8_t AX_Radio_Data_Transmission_Setup(SPI_HandleTypeDef * hspi)
 	radio_write8(AX5043_REG_PKTACCEPTFLAGS, 0x20, hspi);
 
 	// FIFOOOOOOOOOO but lets do it in main, kay?
+	return AXRADIO_ERR_NOERROR;
+}
 
+uint8_t AX_Radio_Data_Reception_Setup(uint32_t datarate, SPI_HandleTypeDef * hspi)
+{
+	AX_Radio_169_MHz_Settings(hspi);
+	AX_Radio_Set_Data_Rate(0, datarate, hspi);
+	radio_write8(AX5043_REG_MODULATION, 0x08, hspi);
+
+	//totally just trusting NBM here:
+	uint8_t timegain = 0x90 | 0x08;
+	uint8_t drgain = 0x90 | 0x04;
+	radio_write8(AX5043_REG_TIMEGAIN0, timegain, hspi);
+	// instructions AND datasheet unclear, idk if these are touched \/ but my guess is no since they're just exponent-mantissa artifacts, and we need just need one byte?
+//	radio_write8(AX5043_REG_TIMEGAIN1, timegain, hspi);
+//	radio_write8(AX5043_REG_TIMEGAIN2, timegain, hspi);
+//	radio_write8(AX5043_REG_TIMEGAIN3, timegain, hspi);
+	radio_write8(AX5043_REG_DRGAIN0, drgain, hspi);
+//	radio_write8(AX5043_REG_DRGAIN1, drgain, hspi);
+//	radio_write8(AX5043_REG_DRGAIN2, drgain, hspi);
+//	radio_write8(AX5043_REG_DRGAIN3, drgain, hspi);
+	radio_write8(AX5043_REG_FREQDEV00, 0, hspi);
+	radio_write8(AX5043_REG_FREQDEV01, 0, hspi);
+	radio_write8(AX5043_REG_FREQDEV02, 0, hspi);
+	radio_write8(AX5043_REG_FREQDEV03, 0, hspi);
+	radio_write8(AX5043_REG_FREQDEV10, 0, hspi);
+	radio_write8(AX5043_REG_FREQDEV11, 0, hspi);
+	radio_write8(AX5043_REG_FREQDEV12, 0, hspi);
+	radio_write8(AX5043_REG_FREQDEV13, 0, hspi);
+	return AXRADIO_ERR_NOERROR;
 }
 
 uint8_t AX_Radio_27_MHz_Settings(SPI_HandleTypeDef * hspi)
@@ -195,10 +224,11 @@ uint8_t AX_Radio_27_MHz_Settings(SPI_HandleTypeDef * hspi)
 	radio_write8(AX5043_REG_PLLVCODIV, PLLVCODIV_EXTERNAL_INDUCTOR |
 			PLLVCODIV_RFDIV_ON, hspi);
 	radio_write8(AX5043_REG_0xF34, F34_RFDIV_ON, hspi);
+	radio_write8(AX5043_REG_0xF35, 0x10, hspi);
 
 	// 27 MHz, allowable range is 26.957 MHz to 27.283 MHz, max BW = 40kHz
 	uint32_t fc = 27;
-	uint8_t AX_Radio_Set_Center_Frequency(fc, hspi);
+	AX_Radio_Set_Center_Frequency(fc, hspi);
 	return AXRADIO_ERR_NOERROR;
 }
 
@@ -207,14 +237,12 @@ uint8_t AX_Radio_169_MHz_Settings(SPI_HandleTypeDef * hspi)
 	radio_write8(AX5043_REG_PLLVCODIV, PLLVCODIV_EXTERNAL_INDUCTOR |
 			PLLVCODIV_RFDIV_OFF, hspi);
 	radio_write8(AX5043_REG_0xF34, F34_RFDIV_OFF, hspi);
+	radio_write8(AX5043_REG_0xF35, 0x11, hspi);
 
 	// 169 MHz, BW = idk
 	// I cannot find the laws on legality on this for the fucking life of me, yolo ig
-	uint32_t freq = 0x063b47bf; // freq=fc/fxtal*(2^24) | since fxtal=16MHz, freq=fc*(2^20)
-	radio_write8(AX5043_REG_FREQA0, freq, hspi);
-	radio_write8(AX5043_REG_FREQA1, (freq >> 8), hspi);
-	radio_write8(AX5043_REG_FREQA2, (freq >> 16), hspi);
-	radio_write8(AX5043_REG_FREQA3, (freq >> 24), hspi);
+	uint32_t fc = 169;
+	AX_Radio_Set_Center_Frequency(fc, hspi);
 	return AXRADIO_ERR_NOERROR;
 }
 
@@ -223,10 +251,11 @@ uint8_t AX_Radio_915_MHz_Settings(SPI_HandleTypeDef * hspi)
 	radio_write8(AX5043_REG_PLLVCODIV, PLLVCODIV_INTERNAL_INDUCTOR |
 			PLLVCODIV_RFDIV_OFF, hspi);
 	radio_write8(AX5043_REG_0xF34, F34_RFDIV_OFF, hspi);
+	radio_write8(AX5043_REG_0xF35, 0x11, hspi); // currently still has 27.12 MHz crystal on the board
 
 	// 915 MHz, range of 902 MHz to 928 Mhz, max BW of 26 MHz
 	uint32_t fc = 915;
-	uint8_t AX_Radio_Set_Center_Frequency(fc, hspi);
+	AX_Radio_Set_Center_Frequency(fc, hspi);
 	return AXRADIO_ERR_NOERROR;
 }
 
@@ -241,7 +270,7 @@ uint8_t AX_Radio_Set_Center_Frequency(uint32_t freq, SPI_HandleTypeDef * hspi)
 		radio_write8(AX5043_REG_FREQA2, (freq >> 16), hspi);
 		radio_write8(AX5043_REG_FREQA3, (freq >> 24), hspi);
 	}
-	else if (freq = 915)
+	else if (freq == 915)
 	{
 		freq = 0x21BD2B0B; // freq=fc/fxtal*(2^24) | since fxtal=16MHz, freq=fc*(2^20)
 		radio_write8(AX5043_REG_FREQA0, freq, hspi);
@@ -279,11 +308,26 @@ uint8_t AX_Radio_Set_Data_Rate(uint8_t rw, uint32_t rate, SPI_HandleTypeDef * hs
 	}
 	else
 	{
-		// TODO: properly implement the receive data rate
-		// NOTE: dependent on fxtal, fxtaldiv, data rate, and decimation...
-		radio_write8(AX5043_REG_RXDATARATE0, rate, hspi);
-		radio_write8(AX5043_REG_RXDATARATE1, (rate >> 8), hspi);
-		radio_write8(AX5043_REG_RXDATARATE2, (rate >> 16), hspi);
+		// NOTE: XTALDIV = 1 for 27 MHz, currently XTALDIV = 2 for 169 & 915 boards..
+		// TODO: define these magic numbers and even abstract away at some point...
+		uint32_t bandwidth = 14400; // (1+m)*rate
+		uint32_t decimation = 27120000 / ((1<<4) * 2 * 4 * bandwidth); // fxtal/(2^4*fxtaldiv*(1/fcoeff)*BW)
+		uint32_t rxdatarate = (1<<7) / (2 * 9600 * decimation) * 27120000;
+		uint32_t iffreq = (((bandwidth / 2) * 2) * (2<<20) / 27120000) ; // setting f_if = bw/2, iffreq = f_if*fxtaldiv*(2^20)/fxtal
+		uint32_t freqOffset = 4182; //27.12MHz crystals are rated for 40ppm frequency stability, so 2*6760hz at worst case
+
+		// leaving PHASEGAINx registers at default
+		radio_write8(AX5043_REG_DECIMATION, decimation, hspi);
+		radio_write8(AX5043_REG_RXDATARATE0, rxdatarate, hspi);
+		radio_write8(AX5043_REG_RXDATARATE1, (rxdatarate >> 8), hspi);
+		radio_write8(AX5043_REG_RXDATARATE2, (rxdatarate >> 16), hspi);
+		radio_write8(AX5043_REG_IFFREQ0, iffreq,hspi);
+		radio_write8(AX5043_REG_IFFREQ0, (iffreq >> 8), hspi);
+		radio_write8(AX5043_REG_MAXRFOFFSET0, freqOffset, hspi);
+		radio_write8(AX5043_REG_MAXRFOFFSET1, (freqOffset >> 8), hspi);
+		radio_write8(AX5043_REG_MAXRFOFFSET2, (1<<8) | (freqOffset >> 16), hspi); // frequency correction at LO1
+		radio_write8(AX5043_REG_AGCTARGET0, 0x89, hspi); // 0.75x max range of 512 to avoid ADC saturation but provide max performance
+		radio_write8(AX5043_REG_AGCGAIN0, 0x74, hspi); // DECAY | ATTACK; F3db~bitrate, so 0x04 corresponds to 9636~9600bps
 	}
 	return AXRADIO_ERR_NOERROR;
 }
@@ -316,6 +360,6 @@ uint8_t AX_Radio_FIFO_Routine(SPI_HandleTypeDef * hspi)
 
 	// set to full tx
 	radio_write8(AX5043_REG_PWRMODE,0x6D,hspi);
-	while ((radio_read8(AX5043_REG_POWSTAT, hspi) & (1 << 3)) == 0)
+	while ((radio_read8(AX5043_REG_POWSTAT, hspi) & (1 << 3)) == 0);
 	return AXRADIO_ERR_NOERROR;
 }

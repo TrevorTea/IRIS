@@ -142,16 +142,6 @@ int main(void) {
 		AX_Radio_FIFO_Routine(&hspi1);
 		printf("AX Status %x\n\r", AX_Radio_Get_Status(&hspi1));
 		printf("PLL Status %x\n\r", AX_Radio_Check_PLL(&hspi1));
-
-		// power down
-//		radio_write8(AX5043_REG_PWRMODE,
-//				AX_Radio_Get_Pwrmode_Upper(&hspi1) | AX5043_PWRSTATE_POWERDOWN,
-//				&hspi1);
-//		while ((radio_read8(AX5043_REG_POWSTAT, &hspi1) & (1 << 3)) == 0);
-//		radio_write8(AX5043_REG_PWRMODE,
-//				AX_Radio_Get_Pwrmode_Upper(&hspi1) | AX5043_PWRSTATE_FULL_TX,
-//				&hspi1);
-//		while ((radio_read8(AX5043_REG_POWSTAT, &hspi1) & (1 << 3)) == 0);
 	}
 
 	/* USER CODE END 3 */
