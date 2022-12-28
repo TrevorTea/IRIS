@@ -39,7 +39,7 @@ char* RSSI_Report_To_JSON_Object(struct RSSI_Report report) {
 	sprintf(objstr, freq_format, 915, 'M', report.ref915, report.sut915);
 	str = strcat(str, objstr);
 	str = strcat(str, ",\n");
-	sprintf(objstr, freq_format, 915, 'G', report.ref915, report.sut915);
+	sprintf(objstr, freq_format, 24, 'G', report.ref24, report.sut24);
 	str = strcat(str, objstr);
 	str = strcat(str, "\n}");
 

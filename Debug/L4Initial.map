@@ -800,7 +800,7 @@ Discarded input sections
  .text.RSSI_Report_To_String
                 0x0000000000000000       0xf0 ./Drivers/AX5243/ax5243_report.o
  .text.RSSI_Report_To_JSON_Object
-                0x0000000000000000      0x164 ./Drivers/AX5243/ax5243_report.o
+                0x0000000000000000      0x160 ./Drivers/AX5243/ax5243_report.o
  .debug_info    0x0000000000000000      0x306 ./Drivers/AX5243/ax5243_report.o
  .debug_abbrev  0x0000000000000000      0x128 ./Drivers/AX5243/ax5243_report.o
  .debug_aranges
